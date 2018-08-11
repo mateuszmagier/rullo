@@ -1,3 +1,91 @@
+$size: 50px;
+$off-bg-color: #171a29;
+$off-border-color: #404350;
+$on-bg-color: #df144c;
+$on-locked-border-color: #e4d292;
+$body-bg-color: #0D0F18;
+
+@mixin generalStyles {
+    width: $size;
+    height: $size;
+    line-height: $size; // vertical centering of number
+    color: white;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.5em;
+    margin: 6px 4px;
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: $body-bg-color;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-container {
+    background-color: $off-bg-color;
+    margin-top: 30px;
+    padding: 70px 30px;
+    border: $on-bg-color solid 3px;
+    box-sizing: border-box;
+}
+
 .row {
+    box-sizing: border-box;
+}
+
+.ball {
+    @include generalStyles;
     display: inline-block;
+    border-radius: 100%;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+
+    &:not(.ball--locked):hover {
+        background-color: $off-bg-color;
+        border-color: $on-bg-color;
+        color: $on-bg-color;
+    }
+
+    &--on {
+        background-color: $on-bg-color;
+        border-color: $on-bg-color;
+    }
+
+    &--off {
+        color: $off-border-color;
+        background-color: $off-bg-color;
+        border-color: $off-border-color;
+    }
+
+    &--locked {
+        border-width: 2px;
+        border-style: solid;
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        &.ball--on {
+            border-color: $on-locked-border-color;
+        }
+    }
+}
+
+.sum {
+    @include generalStyles;
+    border: solid 1px $off-border-color;
+
+    &--completed {
+        border-width: 2px;
+        border-color: $on-locked-border-color;
+    }
 }

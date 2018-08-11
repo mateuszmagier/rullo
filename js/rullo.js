@@ -1,6 +1,7 @@
 let RulloRow = function (numbersArray) {
     this.numbers = numbersArray;
-    this.rowSum = -1;
+    this.currentRowSum = -1;
+    this.targetRowSum = -1;
     this.rowElement = null;
 };
 
@@ -11,11 +12,11 @@ RulloRow.prototype.countSum = function () {
     let sum = 0;
     for (let i = 0; i < this.numbers.length; i++)
         sum += this.numbers[i];
-    this.rowSum = sum;
+    this.currentRowSum = sum;
 };
 
-RulloRow.prototype.getRowSum = function () {
-    return this.rowSum;
+RulloRow.prototype.getCurrentRowSum = function () {
+    return this.currentRowSum;
 };
 
 /*
@@ -27,7 +28,7 @@ RulloRow.prototype.createRowElement = function () {
     row.classList.add("row");
     for (let i = 0; i < this.numbers.length; i++) {
         ball = document.createElement("div");
-        ball.classList.add("ball", "ball-on");
+        ball.classList.add("ball", "ball--on");
         number = document.createElement("span");
         number.classList.add("ball__number");
         number.textContent = this.numbers[i];
@@ -41,6 +42,12 @@ RulloRow.prototype.createRowElement = function () {
 RulloRow.prototype.getRowElement = function () {
     return this.rowElement;
 };
+
+RulloRow.prototype.generateTargetRowSum = function() {
+    let dim = this.numbers.length;
+    let fieldsToSumNumber = Math.floor(Math.random() * (dim-1) + 1); // number of numbers to sum and save in target sum
+    console.log("Sumuję " + fieldsToSumNumber + "/" + dim);
+}
 
 let Rullo = function (container, options) {
     this.gameContainer = container; // HTML element which is a game container
@@ -64,6 +71,7 @@ let Rullo = function (container, options) {
 Rullo.prototype.addRulloRow = function (array) {
     let rulloRow = new RulloRow(array);
     rulloRow.countSum();
+    rulloRow.generateTargetRowSum();
     this.rows.push(rulloRow);
 };
 
@@ -83,7 +91,7 @@ Rullo.prototype.initNumbers = function () {
             arr.push(randomNumber);
         }
         this.addRulloRow(arr);
-        row += " | " + this.rows[i - 1].getRowSum();
+        row += " | " + this.rows[i - 1].getCurrentRowSum();
 
         row += "\n";
     }
