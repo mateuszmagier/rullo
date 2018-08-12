@@ -46,46 +46,41 @@ body {
     @include generalStyles;
     display: inline-block;
     border-radius: 100%;
-    border-style: solid;
-    border-width: 1px;
+    box-shadow: 0 0 0 1px $on-bg-color;
     cursor: pointer;
     transition: all 0.1s ease-in;
 
     &:not(.ball--locked):hover {
         background-color: $off-bg-color;
-        border-color: $on-bg-color;
+        box-shadow: 0 0 0 1px $on-bg-color;
         color: $on-bg-color;
     }
 
     &--on {
         background-color: $on-bg-color;
-        border-color: $on-bg-color;
+        box-shadow: 0 0 0 1px $on-bg-color;
     }
 
     &--off {
         color: $off-border-color;
         background-color: $off-bg-color;
-        border-color: $off-border-color;
+        box-shadow: 0 0 0 1px $off-border-color;
     }
 
     &--locked {
-        border-width: 2px;
-        border-style: solid;
-        margin-top: 5px;
-        margin-bottom: 5px;
-
+        box-shadow: 0 0 0 2px $off-border-color;
+        
         &.ball--on {
-            border-color: $on-locked-border-color;
+            box-shadow: 0 0 0 2px $on-locked-border-color;
         }
     }
 }
 
 .sum {
     @include generalStyles;
-    border: solid 1px $off-border-color;
+    box-shadow: 0 0 0 1px $off-border-color;
 
     &--completed {
-        border-width: 2px;
-        border-color: $on-locked-border-color;
+        box-shadow: 0 0 0 2px $on-locked-border-color;
     }
 }

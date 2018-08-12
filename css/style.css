@@ -31,28 +31,24 @@ body {
   box-sizing: border-box;
   display: inline-block;
   border-radius: 100%;
-  border-style: solid;
-  border-width: 1px;
+  box-shadow: 0 0 0 1px #df144c;
   cursor: pointer;
   transition: all 0.1s ease-in; }
   .ball:not(.ball--locked):hover {
     background-color: #171a29;
-    border-color: #df144c;
+    box-shadow: 0 0 0 1px #df144c;
     color: #df144c; }
   .ball--on {
     background-color: #df144c;
-    border-color: #df144c; }
+    box-shadow: 0 0 0 1px #df144c; }
   .ball--off {
     color: #404350;
     background-color: #171a29;
-    border-color: #404350; }
+    box-shadow: 0 0 0 1px #404350; }
   .ball--locked {
-    border-width: 2px;
-    border-style: solid;
-    margin-top: 5px;
-    margin-bottom: 5px; }
+    box-shadow: 0 0 0 2px #404350; }
     .ball--locked.ball--on {
-      border-color: #e4d292; }
+      box-shadow: 0 0 0 2px #e4d292; }
 
 .sum {
   width: 50px;
@@ -64,9 +60,8 @@ body {
   font-size: 1.5em;
   margin: 6px 4px;
   box-sizing: border-box;
-  border: solid 1px #404350; }
+  box-shadow: 0 0 0 1px #404350; }
   .sum--completed {
-    border-width: 2px;
-    border-color: #e4d292; }
+    box-shadow: 0 0 0 2px #e4d292; }
 
 /*# sourceMappingURL=style.css.map */

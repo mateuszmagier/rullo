@@ -1,7 +1,7 @@
 let RulloRow = function (numbersArray) {
     this.numbers = numbersArray;
-    this.currentRowSum = -1;
-    this.targetRowSum = -1;
+    this.currentRowSum = -1; // current sum of "on" balls in row
+    this.targetRowSum = -1; // target sum of "on" balls in row
     this.rowElement = null;
 };
 
