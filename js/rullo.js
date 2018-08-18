@@ -1,5 +1,48 @@
 /*
     ============
+    RulloSum
+    ============
+*/
+
+let RulloSum = function(sum) {
+    var targetSum = sum,
+        targetSumElement = null;
+    
+    this.getTargetSum = function() {
+        return targetSum;
+    }
+    
+    this.setTargetSum = function(newTargetSum) {
+        targetSum = newTargetSum;
+    }
+    
+    this.getTargetSumElement = function() {
+        return targetSumElement;
+    }
+    
+    this.setTargetSumElement = function(newTargetSumElement) {
+        targetSumElement = newTargetSumElement;
+    }
+    
+    this.createTargetSumElement();
+}
+
+/*
+    creates and returns HTML element containing target sum in row
+*/
+RulloSum.prototype.createTargetSumElement = function() {
+    let targetSumElem = document.createElement("div");
+    targetSumElem.classList.add("target-sum");
+    let number = document.createElement("span");
+    number.classList.add("sum__number");
+    number.textContent = this.getTargetSum();
+    targetSumElem.appendChild(number);
+    this.setTargetSumElement(targetSumElem);
+}
+
+
+/*
+    ============
     RulloBall
     ============
 */
@@ -161,6 +204,7 @@ RulloRow.prototype.countTotalSum = function (numbers) {
     for (let i = 0; i < this.getNumbers().length; i++)
         sum += this.getNumber(i);
     this.setTotalRowSum(sum);
+    this.setCurrentRowSum(sum);
 };
 
 RulloRow.prototype.countCurrentSum = function () {
@@ -180,29 +224,16 @@ RulloRow.prototype.addClickEvent = function () {
         console.log(this.getCurrentRowSum() + "/" + this.getTotalRowSum());
     }.bind(this));
 };
-
-/*
-    creates and returns HTML element containing target sum in row
-*/
-RulloRow.prototype.createTargetSumElement = function () {
-    let targetSumElem = document.createElement("div");
-    targetSumElem.classList.add("target-sum");
-    let number = document.createElement("span");
-    number.classList.add("sum__number");
-    number.textContent = this.getTotalRowSum();
-    targetSumElem.appendChild(number);
-    return targetSumElem;
-};
-
 /*
     creates and returns HTML element of row containing balls and sums
 */
 RulloRow.prototype.createRowElement = function () {
     let rulloBall, number;
-    let targetSumElement;
+    let rulloSum, targetSumElement;
     let row = document.createElement("div");
     row.classList.add("row");
-    targetSumElement = this.createTargetSumElement();
+    rulloSum = new RulloSum(this.getTotalRowSum());
+    targetSumElement = rulloSum.getTargetSumElement();
     row.appendChild(targetSumElement);
     for (let i = 0; i < this.getNumbers().length; i++) {
         rulloBall = new RulloBall(this.getNumber(i)); // RulloBall object
@@ -279,7 +310,10 @@ let RulloColumn = function (rulloRowsArray, index) {
     }
 
     this.initColumnArray();
-    this.createColumnElement();
+    
+    // creates sum element for this column
+    let rulloSum = new RulloSum(this.getCurrentColumnSum());
+    this.setColumnElement(rulloSum.getTargetSumElement());
 };
 
 /*
@@ -293,20 +327,6 @@ RulloColumn.prototype.initColumnArray = function () {
         this.addNumberToColumn(number);
     }
     this.setCurrentColumnSum(sum);
-};
-
-/*
-    creates HTML element containing sum in column
-*/
-RulloColumn.prototype.createColumnElement = function () {
-    let column, number;
-    column = document.createElement("div");
-    column.classList.add("target-sum");
-    number = document.createElement("span");
-    number.classList.add("sum__number");
-    number.textContent = this.getCurrentColumnSum();
-    column.appendChild(number);
-    this.setColumnElement(column);
 };
 
 /*
