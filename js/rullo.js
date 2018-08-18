@@ -4,40 +4,148 @@
     ============
 */
 
-let RulloSum = function(sum) {
-    var targetSum = sum,
-        targetSumElement = null;
-    
-    this.getTargetSum = function() {
+let RulloSum = function (targetSum) {
+    var targetSum = targetSum,
+        targetSumElement = null,
+        currentSum = targetSum,
+        currentSumElement = null,
+        sumElement = null;
+
+    this.getTargetSum = function () {
         return targetSum;
     }
-    
-    this.setTargetSum = function(newTargetSum) {
+
+    this.setTargetSum = function (newTargetSum) {
         targetSum = newTargetSum;
     }
-    
-    this.getTargetSumElement = function() {
+
+    this.getTargetSumElement = function () {
         return targetSumElement;
     }
-    
-    this.setTargetSumElement = function(newTargetSumElement) {
+
+    this.setTargetSumElement = function (newTargetSumElement) {
         targetSumElement = newTargetSumElement;
     }
-    
+
+    this.getCurrentSum = function () {
+        return currentSum;
+    }
+
+    this.setCurrentSum = function (newCurrentSum) {
+        currentSum = newCurrentSum;
+    }
+
+    this.getCurrentSumElement = function () {
+        return currentSumElement;
+    }
+
+    this.setCurrentSumElement = function (newCurrentSumElement) {
+        currentSumElement = newCurrentSumElement;
+    }
+
+    this.getSumElement = function () {
+        return sumElement;
+    }
+
+    this.setSumElement = function (newSumElement) {
+        sumElement = newSumElement;
+    }
+
+    this.createCurrentSumElement();
     this.createTargetSumElement();
+    this.createSumElement();
 }
 
 /*
     creates and returns HTML element containing target sum in row
 */
-RulloSum.prototype.createTargetSumElement = function() {
+RulloSum.prototype.createTargetSumElement = function () {
     let targetSumElem = document.createElement("div");
-    targetSumElem.classList.add("target-sum");
+    targetSumElem.classList.add("sum--target");
     let number = document.createElement("span");
     number.classList.add("sum__number");
     number.textContent = this.getTargetSum();
     targetSumElem.appendChild(number);
     this.setTargetSumElement(targetSumElem);
+}
+
+RulloSum.prototype.createCurrentSumElement = function () {
+    let currentSumElem = document.createElement("div");
+    currentSumElem.classList.add("sum--current");
+    let number = document.createElement("span");
+    number.classList.add("sum__number");
+    number.textContent = this.getCurrentSum();
+    currentSumElem.appendChild(number);
+    this.setCurrentSumElement(currentSumElem);
+}
+
+RulloSum.prototype.createSumElement = function () {
+    let sumElem = document.createElement("div");
+    sumElem.classList.add("sum");
+    sumElem.appendChild(this.getTargetSumElement());
+    sumElem.appendChild(this.getCurrentSumElement());
+    this.setSumElement(sumElem);
+}
+
+/*
+    add mouseover and mouseout events for top/left and bottom/right sum elements
+*/
+function onSumHover(firstElement, secondElement) {
+    firstElement.addEventListener("mouseover", function () {
+        this.parentElement.querySelector(".sum--current").classList.add("sum--current--visible");
+        secondElement.parentElement.querySelector(".sum--current").classList.add("sum--current--visible");
+    });
+    firstElement.addEventListener("mouseout", function () {
+        this.parentElement.querySelector(".sum--current").classList.remove("sum--current--visible");
+        secondElement.parentElement.querySelector(".sum--current").classList.remove("sum--current--visible");
+    });
+}
+
+/*
+    register hover events for all target sum elements
+*/
+RulloSum.addSumMouseHoverEvents = function (firstSelector, secondSelector) {
+    let topSumElements = document.querySelectorAll(firstSelector);
+    let bottomSumElements = document.querySelectorAll(secondSelector);
+
+    for (let i = 0; i < topSumElements.length; i++) {
+
+        onSumHover(topSumElements[i], bottomSumElements[i]);
+        onSumHover(bottomSumElements[i], topSumElements[i]);
+    }
+}
+
+/*
+    add click events for top/left and bottom/right target/current sum elements
+*/
+function onSumClick(firstElement, secondElement) {
+    firstElement.addEventListener("click", function (e) {
+        let currSums;
+        if (e.target.closest(".sum--current")) { // clear visible current sum
+            this.querySelector(".sum--current--still-visible").classList.remove("sum--current--still-visible");
+            secondElement.querySelector(".sum--current--still-visible").classList.remove("sum--current--still-visible");
+        } else {
+            currSums = document.querySelectorAll(".sum--current--still-visible");
+            for (curr of currSums) {
+                curr.classList.remove("sum--current--still-visible");
+            }
+            this.querySelector(".sum--current").classList.add("sum--current--still-visible");
+            secondElement.querySelector(".sum--current").classList.add("sum--current--still-visible");
+        }
+    });
+}
+
+/*
+    register click events for sum elements
+*/
+RulloSum.addSumClickEvents = function (firstSelector, secondSelector) {
+    let topSumElements = document.querySelectorAll(firstSelector);
+    let bottomSumElements = document.querySelectorAll(secondSelector);
+
+    for (let i = 0; i < topSumElements.length; i++) {
+        onSumClick(topSumElements[i], bottomSumElements[i]);
+        onSumClick(bottomSumElements[i], topSumElements[i]);
+    }
 }
 
 
@@ -229,18 +337,19 @@ RulloRow.prototype.addClickEvent = function () {
 */
 RulloRow.prototype.createRowElement = function () {
     let rulloBall, number;
-    let rulloSum, targetSumElement;
+    let rulloSum, sumElementLeft, sumElementRight;
     let row = document.createElement("div");
     row.classList.add("row");
     rulloSum = new RulloSum(this.getTotalRowSum());
-    targetSumElement = rulloSum.getTargetSumElement();
-    row.appendChild(targetSumElement);
+    sumElementLeft = rulloSum.getSumElement();
+    row.appendChild(sumElementLeft);
     for (let i = 0; i < this.getNumbers().length; i++) {
         rulloBall = new RulloBall(this.getNumber(i)); // RulloBall object
         this.addBall(rulloBall); // add ball to array
         row.appendChild(rulloBall.getBallElement());
     }
-    row.appendChild(targetSumElement.cloneNode(true));
+    sumElementRight = sumElementLeft.cloneNode(true);
+    row.appendChild(sumElementRight);
     this.setRowElement(row);
 };
 
@@ -310,10 +419,10 @@ let RulloColumn = function (rulloRowsArray, index) {
     }
 
     this.initColumnArray();
-    
+
     // creates sum element for this column
     let rulloSum = new RulloSum(this.getCurrentColumnSum());
-    this.setColumnElement(rulloSum.getTargetSumElement());
+    this.setColumnElement(rulloSum.getSumElement());
 };
 
 /*
@@ -420,12 +529,13 @@ Rullo.prototype.initColumns = function () {
     creates HTML elements for balls (and rows) and adds them to the game container
 */
 Rullo.prototype.initGameContainer = function () {
-    let row, col, ball;
+    let row, col, sumElementTop, sumElementBottom, ball;
 
     let rowCol = document.createElement("div");
     rowCol.classList.add("row");
     for (let i = 0; i < this.getColumns().length; i++) {
-        rowCol.appendChild(this.getColumn(i).getColumnElement());
+        sumElementTop = this.getColumn(i).getColumnElement();
+        rowCol.appendChild(sumElementTop);
     }
     this.getGameContainer().appendChild(rowCol);
 
@@ -434,4 +544,15 @@ Rullo.prototype.initGameContainer = function () {
     }
 
     this.getGameContainer().appendChild(rowCol.cloneNode(true));
+
+    RulloSum.addSumMouseHoverEvents(".row:first-child .sum .sum--target", ".row:last-child .sum .sum--target");
+    RulloSum.addSumMouseHoverEvents(
+        ".row:not(:first-child):not(:last-child) .sum:first-child .sum--target",
+        ".row:not(:first-child):not(:last-child) .sum:last-child .sum--target"
+    );
+    RulloSum.addSumClickEvents(".row:first-child .sum", ".row:last-child .sum");
+    RulloSum.addSumClickEvents(
+        ".row:not(:first-child):not(:last-child) .sum:first-child",
+        ".row:not(:first-child):not(:last-child) .sum:last-child"
+    );
 };

@@ -40,12 +40,46 @@ body {
 
 .row {
 
-    &:first-child {
-        margin-bottom: 12px;
+    .sum:first-child {
+        .sum--current {
+            left: -52px;
+            bottom: auto;
+            top: 0;
+        }
+    }
+
+    .sum:last-child {
+        .sum--current {
+            right: -52px;
+            bottom: auto;
+            top: 0;
+        }
     }
     
+    &:first-child {
+        margin-bottom: 12px;
+
+        .sum .sum--current {
+            top: -52px;
+            left: 0;
+            right: 0;
+        }
+    }
+
     &:last-child {
         margin-top: 12px;
+        
+        .sum:first-child, .sum:last-child {
+            .sum--current {
+                top: auto;
+            }
+        }
+
+        .sum .sum--current {
+            bottom: -52px;
+            left: 0;
+            right: 0;
+        }
     }
 
     &:first-child,
@@ -53,7 +87,7 @@ body {
         display: flex;
         justify-content: center;
 
-        .target-sum {
+        .sum {
 
             &:first-child {
                 margin-right: 8px;
@@ -99,10 +133,32 @@ body {
     }
 }
 
-.target-sum {
+.sum {
     @include generalStyles;
     display: inline-block;
-    box-shadow: 0 0 0 1px $off-border-color;
+    position: relative;
+
+    &--target {
+        box-shadow: 0 0 0 1px $off-border-color;
+    }
+
+    &--current {
+        position: absolute;
+        width: 50px;
+        cursor: default;
+        background-color: $body-bg-color;
+        opacity: 0;
+        transition: opacity .2s ease-in;
+        
+        &--visible {
+            opacity: 0.6;
+        }
+        
+        &--still-visible {
+            opacity: 1;
+            cursor: pointer;
+        }
+    }
 
     &:first-child {
         margin-right: 20px;
