@@ -1,5 +1,70 @@
 /*
     ============
+    RulloBall
+    ============
+*/
+
+let RulloBall = function (number) {
+    // private members
+    var number = number,
+        enabled = true,
+        locked = false,
+        ballElement = null;
+
+    // getters and setters
+    this.getNumber = function () {
+        return number;
+    }
+
+    this.setNumber = function (newNumber) {
+        number = newNumber;
+    }
+
+    this.isEnabled = function () {
+        return enabled;
+    }
+
+    this.setEnabled = function (bool) {
+        enabled = bool;
+    }
+
+    this.isLocked = function () {
+        return locked;
+    }
+
+    this.setLocked = function (bool) {
+        locked = bool;
+    }
+
+    this.getBallElement = function () {
+        return ballElement;
+    }
+
+    this.setBallElement = function (newBallElement) {
+        ballElement = newBallElement;
+    }
+    
+    
+    this.createBallElement();
+}
+
+/*
+    creates and sets HTML element representing ball
+*/
+RulloBall.prototype.createBallElement = function () {
+    let ballElem, numberElem;
+    ballElem = document.createElement("div");
+    ballElem.classList.add("ball", "ball--on");
+    numberElem = document.createElement("span");
+    numberElem.classList.add("ball__number");
+    numberElem.textContent = this.getNumber();
+    ballElem.appendChild(numberElem);
+    this.setBallElement(ballElem);
+}
+
+
+/*
+    ============
     RulloRow
     ============
 */
@@ -7,43 +72,48 @@
 let RulloRow = function (numbersArray) {
     // private members
     var numbers = numbersArray,
-        currentRowSum = -1, // current sum of "on" balls in row
-        targetRowSum = -1, // target sum of "on" balls in row
-        rowElement = null; // HTML element containing balls and sums
-    
+        currentRowSum = -1, // current sum of enabled balls in row
+        targetRowSum = -1, // target sum of enabled balls in row
+        rowElement = null, // HTML element containing balls and sums
+        balls = []; // array of RulloBall objects
+
     // getters and setters for private members
-    this.getNumber = function(index) {
+    this.getNumber = function (index) {
         return numbers[index];
     }
-    
-    this.getNumbers = function() {
+
+    this.getNumbers = function () {
         return numbers;
     }
-    
-    this.getCurrentRowSum = function() {
+
+    this.getCurrentRowSum = function () {
         return currentRowSum;
     }
-    
-    this.setCurrentRowSum = function(newCurrentRowSum) {
+
+    this.setCurrentRowSum = function (newCurrentRowSum) {
         currentRowSum = newCurrentRowSum;
     }
-    
-    this.getTargetRowSum = function() {
+
+    this.getTargetRowSum = function () {
         return targetRowSum;
     }
-    
-    this.setTargetRowSum = function(newTargetRowSum) {
+
+    this.setTargetRowSum = function (newTargetRowSum) {
         targetRowSum = newTargetRowSum;
     }
-    
-    this.getRowElement = function() {
+
+    this.getRowElement = function () {
         return rowElement;
     }
-    
-    this.setRowElement = function(newRowElement) {
+
+    this.setRowElement = function (newRowElement) {
         rowElement = newRowElement;
     }
     
+    this.addBall = function(ball) {
+        balls.push(ball);
+    }
+
     this.countSum(); // sum numbers in array
     this.generateTargetRowSum();
     this.createRowElement(); // creates and sets rowElement
@@ -76,20 +146,16 @@ RulloRow.prototype.createTargetSumElement = function () {
     creates and returns HTML element of row containing balls and sums
 */
 RulloRow.prototype.createRowElement = function () {
-    let ball, number;
+    let rulloBall, number;
     let targetSumElement;
     let row = document.createElement("div");
     row.classList.add("row");
     targetSumElement = this.createTargetSumElement();
     row.appendChild(targetSumElement);
     for (let i = 0; i < this.getNumbers().length; i++) {
-        ball = document.createElement("div");
-        ball.classList.add("ball", "ball--on");
-        number = document.createElement("span");
-        number.classList.add("ball__number");
-        number.textContent = this.getNumber(i);
-        ball.appendChild(number);
-        row.appendChild(ball);
+        rulloBall = new RulloBall(this.getNumber(i)); // RulloBall object
+        this.addBall(rulloBall); // add ball to array
+        row.appendChild(rulloBall.getBallElement());
     }
     row.appendChild(targetSumElement.cloneNode(true));
     this.setRowElement(row);
@@ -119,44 +185,44 @@ let RulloColumn = function (rulloRowsArray, index) {
         column = [], // numbers in column
         targetColumnSum = -1, // target sum of "on" balls in column
         columnElement = null; // HTML element containing sum in column
-    
-    this.getRowsArray = function() {
+
+    this.getRowsArray = function () {
         return rowsArray;
     }
-    
-    this.getRowArray = function(index) {
+
+    this.getRowArray = function (index) {
         return rowsArray[index];
     }
-    
-    this.getIndex = function() {
+
+    this.getIndex = function () {
         return index;
     }
-    
-    this.getCurrentColumnSum = function() {
+
+    this.getCurrentColumnSum = function () {
         return currentColumnSum;
     }
-    
-    this.setCurrentColumnSum = function(newCurrentColumnSum) {
+
+    this.setCurrentColumnSum = function (newCurrentColumnSum) {
         currentColumnSum = newCurrentColumnSum;
     }
-    
-    this.addNumberToColumn = function(number) {
+
+    this.addNumberToColumn = function (number) {
         column.push(number);
     }
-    
-    this.getTargetColumnSum = function() {
+
+    this.getTargetColumnSum = function () {
         return targetColumnSum;
     }
-    
-    this.setTargetColumnSum = function(newTargetColumnSum) {
+
+    this.setTargetColumnSum = function (newTargetColumnSum) {
         targetColumnSum = newTargetColumnSum;
     }
-    
-    this.getColumnElement = function() {
+
+    this.getColumnElement = function () {
         return columnElement;
     }
-    
-    this.setColumnElement = function(newColumnElement) {
+
+    this.setColumnElement = function (newColumnElement) {
         columnElement = newColumnElement;
     }
 
@@ -180,7 +246,7 @@ RulloColumn.prototype.initColumnArray = function () {
 /*
     creates HTML element containing sum in column
 */
-RulloColumn.prototype.createColumnElement = function() {
+RulloColumn.prototype.createColumnElement = function () {
     let column, number;
     column = document.createElement("div");
     column.classList.add("target-sum");
@@ -208,32 +274,32 @@ let Rullo = function (container, options) {
         max: 9 // the biggest number that can be in a ball
     };
     this.options = Object.assign({}, defaultOptions, options);
-    
-    this.getGameContainer = function() {
+
+    this.getGameContainer = function () {
         return gameContainer;
     }
-    
-    this.addRow = function(row) {
+
+    this.addRow = function (row) {
         rows.push(row);
     }
-    
-    this.getRows = function() {
+
+    this.getRows = function () {
         return rows;
     }
-    
-    this.getRow = function(index) {
+
+    this.getRow = function (index) {
         return rows[index];
     }
-    
-    this.addColumn = function(column) {
+
+    this.addColumn = function (column) {
         columns.push(column);
     }
-    
-    this.getColumns = function() {
+
+    this.getColumns = function () {
         return columns;
     }
-    
-    this.getColumn = function(index) {
+
+    this.getColumn = function (index) {
         return columns[index];
     }
 
@@ -283,17 +349,17 @@ Rullo.prototype.initColumns = function () {
 */
 Rullo.prototype.initGameContainer = function () {
     let row, col, ball;
-    
+
     let rowCol = document.createElement("div");
     rowCol.classList.add("row");
-    for(let i = 0; i < this.getColumns().length; i++) {
+    for (let i = 0; i < this.getColumns().length; i++) {
         rowCol.appendChild(this.getColumn(i).getColumnElement());
     }
     this.getGameContainer().appendChild(rowCol);
-    
+
     for (let i = 0; i < this.getRows().length; i++) {
         this.getGameContainer().appendChild(this.getRow(i).getRowElement());
     }
-    
+
     this.getGameContainer().appendChild(rowCol.cloneNode(true));
 };
