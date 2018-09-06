@@ -245,9 +245,11 @@ RulloBall.prototype.onClick = function () {
     if (ball.classList.contains("ball--on")) { // click on enabled ball
         ball.classList.remove("ball--on");
         ball.classList.add("ball--off");
+        this.setEnabled(false);
     } else { // click on disabled ball
         ball.classList.remove("ball--off");
         ball.classList.add("ball--on");
+        this.setEnabled(true);
     }
 
     // update current sum in row
@@ -279,18 +281,21 @@ RulloBall.prototype.addMouseEvents = function () {
 
     ballElem.addEventListener("mousedown", function () {
         timeout = setTimeout(function () { // detect long press
-            if (this.classList.contains("ball--locked")) { // unlock ball
-                this.classList.remove("ball--locked");
-            } else { // lock ball
-                this.classList.add("ball--locked");
+            if(this.isLocked()) { // unlock ball
+                ballElem.classList.remove("ball--locked");
+                this.setLocked(false);
+            }
+            else { // lock ball
+                ballElem.classList.add("ball--locked");
+                this.setLocked(true);
             }
             longPress = true; // set long press flag
         }.bind(this), requiredHoldingTime);
-    });
+    }.bind(this));
 
     ballElem.addEventListener("mouseup", function () {
         clearTimeout(timeout);
-        if (!longPress && !ballElem.classList.contains("ball--locked")) { // if press time was short and ball isn't locked
+        if (!longPress && !this.isLocked()) { // if press time was short and ball isn't locked
             this.onClick();
         }
         longPress = false;
@@ -390,8 +395,7 @@ RulloRow.prototype.countCurrentSum = function () {
     let ball, ballElem, sum = 0;
     for (let i = 0; i < this.getBalls().length; i++) {
         ball = this.getBall(i);
-        ballElem = ball.getBallElement();
-        if (ballElem.classList.contains("ball--on"))
+        if(ball.isEnabled())
             sum += ball.getNumber();
     }
     this.setCurrentRowSum(sum);
@@ -536,9 +540,9 @@ RulloColumn.prototype.countCurrentSum = function () {
     for (let i = 0; i < this.getRowsArray().length; i++) {
         row = this.getRowArray(i);
         ball = row.getBall(index);
-        ballElem = ball.getBallElement();
-        if (ballElem.classList.contains("ball--on"))
+        if(ball.isEnabled()) {
             sum += ball.getNumber();
+        }
     }
     this.setCurrentColumnSum(sum);
 }
