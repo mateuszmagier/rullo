@@ -210,17 +210,17 @@ let RulloBall = function (number) {
     this.setRulloRow = function (newRulloRow) {
         rulloRow = newRulloRow;
     }
-
-    this.getRulloColumn = function () {
+    
+    this.getRulloColumn = function() {
         return rulloColumn;
     }
-
-    this.setRulloColumn = function (newRulloColumn) {
+    
+    this.setRulloColumn = function(newRulloColumn) {
         rulloColumn = newRulloColumn;
     }
 
     this.createBallElement();
-    this.addMouseEvents();
+    this.addClickListener();
 }
 
 /*
@@ -238,62 +238,34 @@ RulloBall.prototype.createBallElement = function () {
 }
 
 /*
-    click event for ball
+    registers click event for ball
 */
-RulloBall.prototype.onClick = function () {
-    let ball = this.getBallElement();
-    if (ball.classList.contains("ball--on")) { // click on enabled ball
-        ball.classList.remove("ball--on");
-        ball.classList.add("ball--off");
-    } else { // click on disabled ball
-        ball.classList.remove("ball--off");
-        ball.classList.add("ball--on");
-    }
-
-    // update current sum in row
-    row = this.getRulloRow();
-    if (row !== null) {
-        row.countCurrentSum();
-        row.updateCurrentSum();
-    }
-
-    // update current sum in row and column
-    col = this.getRulloColumn();
-    if (col !== null) {
-        col.countCurrentSum();
-        col.updateCurrentSum();
-    }
-}
-
-/*
-    registers mouse events for ball - click and long press
-*/
-RulloBall.prototype.addMouseEvents = function () {
-    let row = null,
-        col = null,
-        longPress = false, // flag
-        timeout,
-        requiredHoldingTime = 500; // long press time
-
+RulloBall.prototype.addClickListener = function () {
+    let row = null, col = null;
     let ballElem = this.getBallElement();
-
-    ballElem.addEventListener("mousedown", function () {
-        timeout = setTimeout(function () { // detect long press
-            if (this.classList.contains("ball--locked")) { // unlock ball
-                this.classList.remove("ball--locked");
-            } else { // lock ball
-                this.classList.add("ball--locked");
-            }
-            longPress = true; // set long press flag
-        }.bind(this), requiredHoldingTime);
-    });
-
-    ballElem.addEventListener("mouseup", function () {
-        clearTimeout(timeout);
-        if (!longPress && !ballElem.classList.contains("ball--locked")) { // if press time was short and ball isn't locked
-            this.onClick();
+    ballElem.addEventListener("click", function () {
+        let ball = this.getBallElement();
+        if (ball.classList.contains("ball--on")) { // click on enabled ball
+            ball.classList.remove("ball--on");
+            ball.classList.add("ball--off");
+        } else { // click on disabled ball
+            ball.classList.remove("ball--off");
+            ball.classList.add("ball--on");
         }
-        longPress = false;
+
+        // update current sum in row
+        row = this.getRulloRow();
+        if(row !== null) {
+            row.countCurrentSum();
+            row.updateCurrentSum();
+        }
+        
+        // update current sum in row and column
+        col = this.getRulloColumn();
+        if(col !== null) {
+            col.countCurrentSum();
+            col.updateCurrentSum();
+        }
     }.bind(this));
 }
 
@@ -399,7 +371,7 @@ RulloRow.prototype.countCurrentSum = function () {
 
 /*
     updates current sum HTML elements in row
-*/
+*/  
 RulloRow.prototype.updateCurrentSum = function () {
     let currentRowSums = this.getRowElement().querySelectorAll(".sum--current");
     for (let currentRowSum of currentRowSums) {
@@ -549,7 +521,7 @@ RulloColumn.prototype.countCurrentSum = function () {
 RulloColumn.prototype.updateCurrentSum = function () {
     let sumElem;
     let sumRows = document.querySelectorAll(".row:first-child, .row:last-child");
-    for (let sumRow of sumRows) {
+    for(let sumRow of sumRows) {
         sumElem = sumRow.querySelectorAll(".sum")[this.getIndex()];
         sumElem.querySelector(".sum--current .sum__number").innerText = this.getCurrentColumnSum();
     }
