@@ -4,10 +4,10 @@
     ============
 */
 
-let RulloSum = function (targetSum) {
+let RulloSum = function (targetSum, currentSum) {
     var targetSum = targetSum,
         targetSumElement = null,
-        currentSum = targetSum,
+        currentSum = currentSum,
         currentSumElement = null,
         sumElement = null;
 
@@ -312,6 +312,7 @@ RulloBall.prototype.addMouseEvents = function () {
 let RulloRow = function (numbersArray) {
     // private members
     var numbers = numbersArray,
+        targetNumbers = [],
         totalRowSum = -1, // total sum of all balls
         currentRowSum = -1, // current sum of enabled balls in row
         targetRowSum = -1, // target sum of enabled balls in row
@@ -325,6 +326,18 @@ let RulloRow = function (numbersArray) {
 
     this.getNumbers = function () {
         return numbers;
+    }
+    
+    this.getTargetNumbers = function() {
+        return targetNumbers;
+    }
+    
+    this.setTargetNumbers = function(newTargetNumbers) {
+        targetNumbers = newTargetNumbers;
+    }
+    
+    this.getTargetNumber = function(index) {
+        return targetNumbers[index];
     }
 
     this.getTotalRowSum = function () {
@@ -420,7 +433,7 @@ RulloRow.prototype.createRowElement = function () {
     let rulloSum, sumElementLeft, sumElementRight;
     let row = document.createElement("div");
     row.classList.add("row");
-    rulloSum = new RulloSum(this.getTotalRowSum());
+    rulloSum = new RulloSum(this.getTargetRowSum(), this.getCurrentRowSum());
     sumElementLeft = rulloSum.getSumElement();
     row.appendChild(sumElementLeft);
     for (let i = 0; i < this.getNumbers().length; i++) {
@@ -434,10 +447,81 @@ RulloRow.prototype.createRowElement = function () {
     this.setRowElement(row);
 };
 
+function shuffleArray(array) {
+    let arrayToShuffle = array.slice(0);
+    let elem;
+    let newArray = [];
+    let arrayLength = arrayToShuffle.length;
+    let index;
+    for(let i = 0; i < arrayLength; i++) {
+        index = Math.floor(Math.random() * arrayToShuffle.length);
+        elem = arrayToShuffle.splice(index, 1); // remove element
+        newArray.push(elem[0]); // add element to new array
+    }
+    return newArray;
+}
+
+function sumPartOfArray(array, n) {
+    let sum = 0;
+    for(let i = 0; i < n; i++)
+        sum += array[i];
+    return sum;
+}
+
+RulloRow.prototype.generateTargetRowSumAlt = function () {
+    let tempArray, targetSum;
+    let dim = this.getNumbers().length;
+    let fieldsToSumNumber = Math.floor(Math.random() * (dim - 2) + 2); // number of numbers to sum and save in target sum - from [2,dim-1]
+    console.log("Sumuję " + fieldsToSumNumber + "/" + dim);
+    tempArray = shuffleArray(this.getNumbers());
+    console.log(this.getNumbers(), "---->", tempArray);
+    targetSum = sumPartOfArray(tempArray, fieldsToSumNumber);
+    console.log("Target: " + targetSum + "/" + this.getTotalRowSum());
+    this.setTargetRowSum(targetSum);
+}
+
+/*
+    changes value of n random elements of array to zero and returns modified array
+*/
+function ignoreRandomBalls(array, n) {
+    let length = array.length;
+    let index; // index to ignore
+    let ignoredIndexes = [];
+    let modifiedArray = array.slice(0);
+    for(let i = 0; i < n; i++) {
+        do {
+            index = Math.floor(Math.random() * length); // random index
+        }
+        while(ignoredIndexes.includes(index)); // ignored indexes must be unique
+        ignoredIndexes.push(index);
+    }
+    
+    for(let j = 0; j < ignoredIndexes.length; j++) { // reset all elements under ignored indexed
+        modifiedArray[ignoredIndexes[j]] = 0;
+    }
+    
+    console.log(ignoredIndexes);
+    return modifiedArray;
+}
+
+function sumArrayElements(array) {
+    let sum = 0;
+    for(let i = 0; i < array.length; i++)
+        sum += array[i];
+    return sum;
+}
+
 RulloRow.prototype.generateTargetRowSum = function () {
     let dim = this.getNumbers().length;
-    let fieldsToSumNumber = Math.floor(Math.random() * (dim - 1) + 1); // number of numbers to sum and save in target sum
-    console.log("Sumuję " + fieldsToSumNumber + "/" + dim);
+    let targetNumbers, targetSum;
+    let ballsToIgnore = Math.floor(Math.random() * (dim - 2) + 1); // number of numbers to ignore in target sum - [1,dim-2]
+    console.log("Ignoruję " + ballsToIgnore + "/" + dim);
+    targetNumbers = ignoreRandomBalls(this.getNumbers(), ballsToIgnore);
+    this.setTargetNumbers(targetNumbers);
+    console.log(this.getNumbers(), "---->", targetNumbers);
+    targetSum = sumArrayElements(targetNumbers);
+    console.log("Target: " + targetSum + "/" + this.getTotalRowSum());
+    this.setTargetRowSum(targetSum);
 }
 
 
@@ -455,7 +539,7 @@ let RulloColumn = function (rulloRowsArray, index) {
     var rowsArray = rulloRowsArray,
         index = index, // index of column
         currentColumnSum = -1, // current sum of "on" balls in column
-        column = [], // numbers in column
+        column = [], // all numbers in column
         targetColumnSum = -1, // target sum of "on" balls in column
         totalColumnSum = -1, // total sum of all balls in column
         columnElement = null; // HTML element containing sum in column
@@ -511,7 +595,7 @@ let RulloColumn = function (rulloRowsArray, index) {
     this.initColumnArray();
 
     // creates sum element for this column
-    let rulloSum = new RulloSum(this.getCurrentColumnSum());
+    let rulloSum = new RulloSum(this.getTargetColumnSum(), this.getCurrentColumnSum());
     this.setColumnElement(rulloSum.getSumElement());
 };
 
@@ -519,15 +603,18 @@ let RulloColumn = function (rulloRowsArray, index) {
     creates column array using rows array, and calculates current sum in column
 */
 RulloColumn.prototype.initColumnArray = function () {
-    let number, ball, sum = 0;
+    let number, targetNumber, ball, sum = 0, targetSum = 0;
     for (let i = 0; i < this.getRowsArray().length; i++) {
         ball = this.getRowArray(i).getBall(this.getIndex());
         ball.setRulloColumn(this);
         number = this.getRowArray(i).getNumber(this.getIndex());
+        targetNumber = this.getRowArray(i).getTargetNumber(this.getIndex());
         sum += number;
+        targetSum += targetNumber;
         this.addNumberToColumn(number);
     }
     this.setCurrentColumnSum(sum);
+    this.setTargetColumnSum(targetSum);
     this.setTotalColumnSum(sum);
 };
 
