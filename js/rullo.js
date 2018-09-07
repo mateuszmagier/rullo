@@ -463,10 +463,9 @@ RulloRow.prototype.updateCurrentSum = function () {
     for (let currentRowSum of currentRowSums) {
         console.log("update");
         currentRowSum.querySelector(".sum__number").innerText = this.getCurrentRowSum();
-        if(completed) {
+        if (completed) {
             currentRowSum.parentElement.classList.add("sum--completed");
-        }
-        else {
+        } else {
             currentRowSum.parentElement.classList.remove("sum--completed");
         }
     }
@@ -607,12 +606,12 @@ let RulloColumn = function (rulloRowsArray, index) {
     this.setColumnElement = function (newColumnElement) {
         columnElement = newColumnElement;
     }
-    
-    this.getSum = function() {
+
+    this.getSum = function () {
         return sum;
     }
-    
-    this.setSum = function(newSum) {
+
+    this.setSum = function (newSum) {
         sum = newSum;
     }
 
@@ -671,10 +670,9 @@ RulloColumn.prototype.updateCurrentSum = function () {
     for (let sumRow of sumRows) {
         sumElem = sumRow.querySelectorAll(".sum")[this.getIndex()];
         sumElem.querySelector(".sum--current .sum__number").innerText = this.getCurrentColumnSum();
-        if(completed) {
+        if (completed) {
             sumElem.classList.add("sum--completed");
-        }
-        else {
+        } else {
             sumElem.classList.remove("sum--completed");
         }
     }
@@ -768,6 +766,53 @@ Rullo.prototype.initColumns = function () {
 };
 
 /*
+    checks if sum in every column is completed at the beginning of game
+*/
+Rullo.prototype.checkColumnSums = function () {
+    for (let col of this.getColumns()) {
+        let completed = col.getSum().isCompleted();
+        let sumRows = document.querySelectorAll(".row:first-child, .row:last-child");
+        for (let sumRow of sumRows) {
+            sumElem = sumRow.querySelectorAll(".sum")[col.getIndex()];
+            if (completed) {
+                sumElem.classList.add("sum--completed");
+            } else {
+                sumElem.classList.remove("sum--completed");
+            }
+        }
+    }
+};
+
+/*
+    checks if game is completed
+*/
+Rullo.prototype.checkGameState = function() {
+    for(let row of this.getRows()) {
+        if(!row.getSum().isCompleted()) { // incomplete sum in row
+            return false;
+        } 
+    }
+    for(let col of this.getColumns()) {
+        if(!col.getSum().isCompleted()) { // incomplete sum in column
+            return false;
+        } 
+    }
+    return true;
+}
+
+Rullo.prototype.registerBallsListeners = function() {
+    let balls = document.querySelectorAll(".ball");
+    for(let ball of balls) {
+        ball.addEventListener("click", function() {
+            if(this.checkGameState())
+                setTimeout(function() {
+                    alert("Udało się!");
+                }, 300);
+        }.bind(this));
+    }
+}
+
+/*
     creates HTML elements for balls (and rows) and adds them to the game container
 */
 Rullo.prototype.initGameContainer = function () {
@@ -786,6 +831,8 @@ Rullo.prototype.initGameContainer = function () {
     }
 
     this.getGameContainer().appendChild(rowCol.cloneNode(true));
+    this.checkColumnSums();
+    this.registerBallsListeners();
 
     RulloSum.addSumMouseHoverEvents(".row:first-child .sum .sum--target", ".row:last-child .sum .sum--target");
     RulloSum.addSumMouseHoverEvents(
