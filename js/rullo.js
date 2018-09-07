@@ -9,7 +9,8 @@ let RulloSum = function (targetSum, currentSum) {
         targetSumElement = null,
         currentSum = currentSum,
         currentSumElement = null,
-        sumElement = null;
+        sumElement = null,
+        completed = false;
 
     this.getTargetSum = function () {
         return targetSum;
@@ -33,6 +34,7 @@ let RulloSum = function (targetSum, currentSum) {
 
     this.setCurrentSum = function (newCurrentSum) {
         currentSum = newCurrentSum;
+        this.setCompleted(this.compare());
     }
 
     this.getCurrentSumElement = function () {
@@ -50,6 +52,21 @@ let RulloSum = function (targetSum, currentSum) {
     this.setSumElement = function (newSumElement) {
         sumElement = newSumElement;
     }
+
+    this.isCompleted = function () {
+        return completed;
+    }
+
+    this.setCompleted = function (bool) {
+        completed = bool;
+    }
+
+    this.compare = function () {
+        return currentSum === targetSum;
+    }
+
+    this.setCompleted(this.compare());
+
 
     this.createCurrentSumElement();
     this.createTargetSumElement();
@@ -281,11 +298,10 @@ RulloBall.prototype.addMouseEvents = function () {
 
     ballElem.addEventListener("mousedown", function () {
         timeout = setTimeout(function () { // detect long press
-            if(this.isLocked()) { // unlock ball
+            if (this.isLocked()) { // unlock ball
                 ballElem.classList.remove("ball--locked");
                 this.setLocked(false);
-            }
-            else { // lock ball
+            } else { // lock ball
                 ballElem.classList.add("ball--locked");
                 this.setLocked(true);
             }
@@ -317,7 +333,9 @@ let RulloRow = function (numbersArray) {
         currentRowSum = -1, // current sum of enabled balls in row
         targetRowSum = -1, // target sum of enabled balls in row
         rowElement = null, // HTML element containing balls and sums
-        balls = []; // array of RulloBall objects
+        balls = [], // array of RulloBall objects
+        sum; // RulloSum object
+    //        sums = []; // array of RulloSum objects
 
     // getters and setters for private members
     this.getNumber = function (index) {
@@ -327,16 +345,16 @@ let RulloRow = function (numbersArray) {
     this.getNumbers = function () {
         return numbers;
     }
-    
-    this.getTargetNumbers = function() {
+
+    this.getTargetNumbers = function () {
         return targetNumbers;
     }
-    
-    this.setTargetNumbers = function(newTargetNumbers) {
+
+    this.setTargetNumbers = function (newTargetNumbers) {
         targetNumbers = newTargetNumbers;
     }
-    
-    this.getTargetNumber = function(index) {
+
+    this.getTargetNumber = function (index) {
         return targetNumbers[index];
     }
 
@@ -384,6 +402,26 @@ let RulloRow = function (numbersArray) {
         return balls[index];
     }
 
+    this.getSum = function () {
+        return sum;
+    }
+
+    this.setSum = function (newSum) {
+        sum = newSum;
+    }
+
+    //    this.addSum = = function(sum) {
+    //        sums.push(sum);
+    //    }
+    //    
+    //    this.getSums = function() {
+    //        return sums;
+    //    }
+    //    
+    //    this.getSum = function(index) {
+    //        return sums[index];
+    //    }
+
     this.countTotalSum(); // sum all numbers in array
     this.generateTargetRowSum();
     this.createRowElement(); // creates and sets rowElement
@@ -408,7 +446,7 @@ RulloRow.prototype.countCurrentSum = function () {
     let ball, ballElem, sum = 0;
     for (let i = 0; i < this.getBalls().length; i++) {
         ball = this.getBall(i);
-        if(ball.isEnabled())
+        if (ball.isEnabled())
             sum += ball.getNumber();
     }
     this.setCurrentRowSum(sum);
@@ -418,10 +456,19 @@ RulloRow.prototype.countCurrentSum = function () {
     updates current sum HTML elements in row
 */
 RulloRow.prototype.updateCurrentSum = function () {
+    this.getSum().setCurrentSum(this.getCurrentRowSum()); // update current sum in RulloSum object
+    let completed = this.getSum().isCompleted();
+
     let currentRowSums = this.getRowElement().querySelectorAll(".sum--current");
     for (let currentRowSum of currentRowSums) {
         console.log("update");
         currentRowSum.querySelector(".sum__number").innerText = this.getCurrentRowSum();
+        if(completed) {
+            currentRowSum.parentElement.classList.add("sum--completed");
+        }
+        else {
+            currentRowSum.parentElement.classList.remove("sum--completed");
+        }
     }
 }
 
@@ -434,6 +481,7 @@ RulloRow.prototype.createRowElement = function () {
     let row = document.createElement("div");
     row.classList.add("row");
     rulloSum = new RulloSum(this.getTargetRowSum(), this.getCurrentRowSum());
+    this.setSum(rulloSum);
     sumElementLeft = rulloSum.getSumElement();
     row.appendChild(sumElementLeft);
     for (let i = 0; i < this.getNumbers().length; i++) {
@@ -447,39 +495,6 @@ RulloRow.prototype.createRowElement = function () {
     this.setRowElement(row);
 };
 
-function shuffleArray(array) {
-    let arrayToShuffle = array.slice(0);
-    let elem;
-    let newArray = [];
-    let arrayLength = arrayToShuffle.length;
-    let index;
-    for(let i = 0; i < arrayLength; i++) {
-        index = Math.floor(Math.random() * arrayToShuffle.length);
-        elem = arrayToShuffle.splice(index, 1); // remove element
-        newArray.push(elem[0]); // add element to new array
-    }
-    return newArray;
-}
-
-function sumPartOfArray(array, n) {
-    let sum = 0;
-    for(let i = 0; i < n; i++)
-        sum += array[i];
-    return sum;
-}
-
-RulloRow.prototype.generateTargetRowSumAlt = function () {
-    let tempArray, targetSum;
-    let dim = this.getNumbers().length;
-    let fieldsToSumNumber = Math.floor(Math.random() * (dim - 2) + 2); // number of numbers to sum and save in target sum - from [2,dim-1]
-    console.log("Sumuję " + fieldsToSumNumber + "/" + dim);
-    tempArray = shuffleArray(this.getNumbers());
-    console.log(this.getNumbers(), "---->", tempArray);
-    targetSum = sumPartOfArray(tempArray, fieldsToSumNumber);
-    console.log("Target: " + targetSum + "/" + this.getTotalRowSum());
-    this.setTargetRowSum(targetSum);
-}
-
 /*
     changes value of n random elements of array to zero and returns modified array
 */
@@ -488,25 +503,25 @@ function ignoreRandomBalls(array, n) {
     let index; // index to ignore
     let ignoredIndexes = [];
     let modifiedArray = array.slice(0);
-    for(let i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
         do {
             index = Math.floor(Math.random() * length); // random index
         }
-        while(ignoredIndexes.includes(index)); // ignored indexes must be unique
+        while (ignoredIndexes.includes(index)); // ignored indexes must be unique
         ignoredIndexes.push(index);
     }
-    
-    for(let j = 0; j < ignoredIndexes.length; j++) { // reset all elements under ignored indexed
+
+    for (let j = 0; j < ignoredIndexes.length; j++) { // reset all elements under ignored indexed
         modifiedArray[ignoredIndexes[j]] = 0;
     }
-    
+
     console.log(ignoredIndexes);
     return modifiedArray;
 }
 
 function sumArrayElements(array) {
     let sum = 0;
-    for(let i = 0; i < array.length; i++)
+    for (let i = 0; i < array.length; i++)
         sum += array[i];
     return sum;
 }
@@ -542,7 +557,8 @@ let RulloColumn = function (rulloRowsArray, index) {
         column = [], // all numbers in column
         targetColumnSum = -1, // target sum of "on" balls in column
         totalColumnSum = -1, // total sum of all balls in column
-        columnElement = null; // HTML element containing sum in column
+        columnElement = null, // HTML element containing sum in column
+        sum; // RulloSum object
 
     this.getRowsArray = function () {
         return rowsArray;
@@ -591,11 +607,20 @@ let RulloColumn = function (rulloRowsArray, index) {
     this.setColumnElement = function (newColumnElement) {
         columnElement = newColumnElement;
     }
+    
+    this.getSum = function() {
+        return sum;
+    }
+    
+    this.setSum = function(newSum) {
+        sum = newSum;
+    }
 
     this.initColumnArray();
 
     // creates sum element for this column
     let rulloSum = new RulloSum(this.getTargetColumnSum(), this.getCurrentColumnSum());
+    this.setSum(rulloSum);
     this.setColumnElement(rulloSum.getSumElement());
 };
 
@@ -603,7 +628,8 @@ let RulloColumn = function (rulloRowsArray, index) {
     creates column array using rows array, and calculates current sum in column
 */
 RulloColumn.prototype.initColumnArray = function () {
-    let number, targetNumber, ball, sum = 0, targetSum = 0;
+    let number, targetNumber, ball, sum = 0,
+        targetSum = 0;
     for (let i = 0; i < this.getRowsArray().length; i++) {
         ball = this.getRowArray(i).getBall(this.getIndex());
         ball.setRulloColumn(this);
@@ -627,7 +653,7 @@ RulloColumn.prototype.countCurrentSum = function () {
     for (let i = 0; i < this.getRowsArray().length; i++) {
         row = this.getRowArray(i);
         ball = row.getBall(index);
-        if(ball.isEnabled()) {
+        if (ball.isEnabled()) {
             sum += ball.getNumber();
         }
     }
@@ -639,10 +665,18 @@ RulloColumn.prototype.countCurrentSum = function () {
 */
 RulloColumn.prototype.updateCurrentSum = function () {
     let sumElem;
+    this.getSum().setCurrentSum(this.getCurrentColumnSum()); // update current sum in RulloSum object
+    let completed = this.getSum().isCompleted();
     let sumRows = document.querySelectorAll(".row:first-child, .row:last-child");
     for (let sumRow of sumRows) {
         sumElem = sumRow.querySelectorAll(".sum")[this.getIndex()];
         sumElem.querySelector(".sum--current .sum__number").innerText = this.getCurrentColumnSum();
+        if(completed) {
+            sumElem.classList.add("sum--completed");
+        }
+        else {
+            sumElem.classList.remove("sum--completed");
+        }
     }
 }
 
