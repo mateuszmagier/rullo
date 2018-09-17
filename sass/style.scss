@@ -5,6 +5,8 @@ $on-bg-color: #df144c;
 $on-locked-border-color: #e4d292;
 $body-bg-color: #0D0F18;
 
+@import 'menu';
+
 @mixin generalStyles {
     width: $size;
     height: $size;
@@ -26,9 +28,17 @@ $body-bg-color: #0D0F18;
 body {
     background-color: $body-bg-color;
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+}
+
+.container {
+    display: none;
+
+    &--visible {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .game-container {
@@ -55,7 +65,7 @@ body {
             top: 0;
         }
     }
-    
+
     &:first-child {
         margin-bottom: 12px;
 
@@ -68,8 +78,9 @@ body {
 
     &:last-child {
         margin-top: 12px;
-        
-        .sum:first-child, .sum:last-child {
+
+        .sum:first-child,
+        .sum:last-child {
             .sum--current {
                 top: auto;
             }
@@ -149,11 +160,11 @@ body {
         background-color: $body-bg-color;
         opacity: 0;
         transition: opacity .2s ease-in;
-        
+
         &--visible {
             opacity: 0.6;
         }
-        
+
         &--still-visible {
             opacity: 1;
             cursor: pointer;

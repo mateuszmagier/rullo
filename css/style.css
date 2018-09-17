@@ -1,13 +1,58 @@
+.main-menu-container {
+  font-family: Lato;
+  color: white;
+  padding-top: 50px;
+  text-align: center;
+  font-weight: 300; }
+  .main-menu-container--invisible {
+    display: none; }
+
+.rullo-logo {
+  text-align: center;
+  font-size: 2.5em;
+  letter-spacing: 0.7em;
+  border: 3px solid #df144c;
+  display: inline-block;
+  padding: 18px 0;
+  padding-left: 0.7em; }
+
+.main-menu {
+  width: 30%;
+  margin: 0 auto;
+  margin-top: 100px;
+  display: flex;
+  justify-content: space-between; }
+
+.game-mode {
+  border: solid 2px #df144c;
+  border-radius: 100%;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  transition: background-color .2s ease-in; }
+  .game-mode:hover {
+    background-color: #df144c; }
+  .game-mode .game-mode-name {
+    text-transform: uppercase;
+    font-size: 1.2em;
+    position: relative;
+    top: 45px; }
+
 * {
   margin: 0;
   padding: 0; }
 
 body {
   background-color: #0D0F18;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center; }
+  height: 100vh; }
+
+.container {
+  display: none; }
+  .container--visible {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
 
 .game-container {
   background-color: #171a29;
@@ -31,7 +76,8 @@ body {
     right: 0; }
 .row:last-child {
   margin-top: 12px; }
-  .row:last-child .sum:first-child .sum--current, .row:last-child .sum:last-child .sum--current {
+  .row:last-child .sum:first-child .sum--current,
+  .row:last-child .sum:last-child .sum--current {
     top: auto; }
   .row:last-child .sum .sum--current {
     bottom: -52px;
