@@ -5,6 +5,7 @@ $on-bg-color: #df144c;
 $on-locked-border-color: #e4d292;
 $body-bg-color: #0D0F18;
 
+@import 'keyframes';
 @import 'menu';
 
 @mixin generalStyles {
@@ -28,6 +29,7 @@ $body-bg-color: #0D0F18;
 body {
     background-color: $body-bg-color;
     height: 100vh;
+    overflow: hidden;
 }
 
 .container {

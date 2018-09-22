@@ -1,31 +1,66 @@
-.main-menu-container {
+.menu-container {
     font-family: Lato;
-    color: white;
-    padding-top: 50px;
+    color: white; //    padding-top: 50px;
     text-align: center;
     font-weight: 300;
-    
+    height: 100vh;
+    width: 50%;
+    margin-left: 25%;
+
+    @media only screen and (min-width: 751px) and (max-width: 1000px) {
+        width: 75%;
+        margin-left: 12.5%;
+    }
+
+    @media only screen and (min-width: 301px) and (max-width: 750px) {
+        width: 90%;
+        margin-left: 5%;
+    }
+
     &--invisible {
         display: none;
     }
 }
 
 .rullo-logo {
-    text-align: center;
+    margin-top: 50px;
     font-size: 2.5em;
-    letter-spacing: 0.7em;
-    border: 3px solid $on-bg-color;
-    display: inline-block;
-    padding: 18px 0;
-    padding-left: 0.7em;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 20px;
+    height: 80px;
+    border: 3px solid $on-bg-color; //    padding: 18px 0;
+    animation-name: rulloLogoAnimation;
+    animation-fill-mode: forwards;
+    animation-duration: 2.5s;
+
+    &--invisible {
+        animation-name: rulloLogoSlideUpAnimation;
+        animation-duration: .8s;
+    }
+
+    span {
+        opacity: 0;
+        padding-left: 20px;
+        text-align: center;
+        animation-name: rulloNameAnimation;
+        animation-fill-mode: forwards;
+        animation-duration: 1.5s;
+        animation-delay: 2.7s;
+    }
 }
 
 .main-menu {
-    width: 30%;
+    width: 65%;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 70px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+
+    &--invisible {
+        display: none;
+    }
 }
 
 .game-mode {
@@ -37,8 +72,34 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    opacity: 0;
     transition: background-color .2s ease-in;
-    
+    animation-name: gameModeFadeInAnimation;
+    animation-duration: .8s;
+    animation-fill-mode: forwards;
+
+    &.classic-mode {
+        animation-delay: 3.6s;
+        margin-right: 20px;
+
+        &--invisible {
+            opacity: 1;
+            animation-name: gameModeFadeOutLeftAnimation;
+            animation-delay: 0s;
+        }
+    }
+
+    &.endless-mode {
+        animation-delay: 4s;
+        margin-left: 20px;
+
+        &--invisible {
+            opacity: 1;
+            animation-name: gameModeFadeOutRightAnimation;
+            animation-delay: 0s;
+        }
+    }
+
     &:hover {
         background-color: $on-bg-color;
     }
@@ -46,5 +107,14 @@
     .game-mode-name {
         text-transform: uppercase;
         font-size: 1.2em;
+    }
+}
+
+.classic-menu {
+    display: flex;
+    margin-top: 70px;
+    
+    &--invisible {
+        display: none;
     }
 }
