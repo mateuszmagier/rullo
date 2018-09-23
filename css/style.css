@@ -55,7 +55,7 @@
   color: white;
   text-align: center;
   font-weight: 300;
-  height: 100vh;
+  height: 150vh;
   width: 50%;
   margin-left: 25%; }
   @media only screen and (min-width: 751px) and (max-width: 1000px) {
@@ -137,10 +137,68 @@
     font-size: 1.2em; }
 
 .classic-menu {
-  display: flex;
-  margin-top: 70px; }
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 70px;
+  text-align: center;
+  animation-name: gameModeFadeInAnimation;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  opacity: 0; }
   .classic-menu--invisible {
+    animation-name: none;
     display: none; }
+  .classic-menu .range-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; }
+    .classic-menu .range-container .range {
+      width: 33.33333%;
+      padding: 20px 0; }
+      .classic-menu .range-container .range:hover {
+        cursor: pointer; }
+        .classic-menu .range-container .range:hover .range-circle {
+          background-color: #df144c; }
+      .classic-menu .range-container .range--chosen {
+        background-color: #0c0c14; }
+        .classic-menu .range-container .range--chosen .range-circle {
+          background-color: #df144c; }
+      .classic-menu .range-container .range .range-circle {
+        margin: 0 auto;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 1.3em;
+        border: solid 2px #df144c;
+        border-radius: 100%;
+        transition: background-color .2s ease-in; }
+  .classic-menu .chosen-range-line {
+    width: 33.33333%;
+    height: 3px;
+    background-color: #df144c;
+    transition: transform .3s ease-in; }
+    .classic-menu .chosen-range-line-1 {
+      transform: translateX(0); }
+    .classic-menu .chosen-range-line-2 {
+      transform: translateX(100%); }
+    .classic-menu .chosen-range-line-3 {
+      transform: translateX(200%); }
+  .classic-menu .size-container {
+    width: 100%;
+    background-color: black;
+    padding: 20px 0; }
+    .classic-menu .size-container .size {
+      width: 50%;
+      height: 35px;
+      line-height: 35px;
+      margin: 25px auto;
+      border: solid 2px #df144c;
+      cursor: pointer;
+      transition: background-color .2s ease-in; }
+      .classic-menu .size-container .size:hover {
+        background-color: #df144c; }
 
 * {
   margin: 0;

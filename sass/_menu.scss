@@ -3,7 +3,7 @@
     color: white; //    padding-top: 50px;
     text-align: center;
     font-weight: 300;
-    height: 100vh;
+    height: 150vh;
     width: 50%;
     margin-left: 25%;
 
@@ -111,10 +111,97 @@
 }
 
 .classic-menu {
-    display: flex;
+    display: block;
+    width: 80%;
+    margin: 0 auto;
     margin-top: 70px;
-    
+    text-align: center;
+    animation-name: gameModeFadeInAnimation;
+    animation-duration: 1s;
+//    animation-delay: 1s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+
     &--invisible {
+        animation-name: none;
         display: none;
+    }
+
+    .range-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .range {
+            width: 33.33333%;
+            padding: 20px 0;
+
+            &:hover {
+                cursor: pointer;
+                
+                .range-circle {
+                    background-color: $on-bg-color;
+                }
+            }
+
+            &--chosen {
+                background-color: $chosen-range-bg-color;
+                
+                .range-circle {
+                    background-color: $on-bg-color;
+                }
+            }
+
+            .range-circle {
+                margin: 0 auto;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                font-size: 1.3em;
+                border: solid 2px $on-bg-color;
+                border-radius: 100%;
+                transition: background-color .2s ease-in;
+            }
+        }
+    }
+
+    .chosen-range-line {
+        width: 33.33333%;
+        height: 3px;
+        background-color: $on-bg-color;
+        transition: transform .3s ease-in;
+
+        &-1 {
+            transform: translateX(0);
+        }
+
+        &-2 {
+            transform: translateX(100%);
+        }
+
+        &-3 {
+            transform: translateX(200%);
+        }
+    }
+
+    .size-container {
+        width: 100%;
+        background-color: black;
+        padding: 20px 0;
+        
+        .size {
+            width: 50%;
+            height: 35px;
+            line-height: 35px;
+            margin: 25px auto;
+            border: solid 2px $on-bg-color;
+            cursor: pointer;
+            transition: background-color .2s ease-in;
+            
+            &:hover {
+                background-color: $on-bg-color;
+            }
+        }
     }
 }
