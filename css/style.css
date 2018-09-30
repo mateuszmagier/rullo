@@ -188,17 +188,22 @@
   .classic-menu .size-container {
     width: 100%;
     background-color: black;
-    padding: 20px 0; }
+    padding: 10px 0; }
     .classic-menu .size-container .size {
       width: 50%;
       height: 35px;
       line-height: 35px;
-      margin: 25px auto;
+      margin: 20px auto;
+      margin-bottom: 0;
       border: solid 2px #df144c;
       cursor: pointer;
       transition: background-color .2s ease-in; }
       .classic-menu .size-container .size:hover {
         background-color: #df144c; }
+    .classic-menu .size-container .size-wins {
+      margin-top: 5px;
+      margin-bottom: 15px;
+      font-size: 0.9em; }
 
 * {
   margin: 0;
