@@ -735,12 +735,14 @@ let Rullo = function (container, options) {
 Rullo.prototype.initRows = function () {
     let min = this.options.min;
     let max = this.options.max;
+    console.log("INITROWS " + min + " " + max);
     let randomNumber, rulloRow;
     let row = "";
     for (let i = 1; i <= this.options.dim; i++) {
         let arr = [];
         for (let j = 1; j <= this.options.dim; j++) {
             randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
+            console.log("RANDOMNUMBER " + randomNumber + " MIN " + min + " MAX " + max);
             row += randomNumber + " ";
             arr.push(randomNumber);
         }

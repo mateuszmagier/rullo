@@ -8,6 +8,28 @@ const ClassicMenu = function () {
         sizes = null,
         chosenSize = null,
         chosenSizeText = "";
+    
+    var initClassicGame = function (dimension, minimum, maximum) {
+        const gameContainer = document.createElement("div");
+        gameContainer.classList.add("game-container");
+        document.querySelector(".container").appendChild(gameContainer);
+        document.querySelector(".container").classList.add("container--visible");
+
+        let options = {
+            dim: dimension,
+            min: minimum,
+            max: maximum
+        };
+        const game = new Rullo(
+            document.querySelector(".game-container"),
+            options
+        );
+    }
+    
+    function hideMenuContainer() {
+        menuContainer.classList.add("menu-container--invisible");
+//        initClassicGame();
+    }
 
     classicMenu = document.querySelector(".classic-menu");
     ranges = classicMenu.querySelectorAll(".range");
@@ -37,9 +59,16 @@ const ClassicMenu = function () {
     function registerSizeClickListeners() {
         [].forEach.call(sizes, function (size) {
             size.addEventListener("click", function () {
+                let dim, min, max;
                 chosenSize = this;
                 chosenSizeText = chosenSize.innerText;
                 console.log("Wybrane ustawienia: RANGE: " + chosenRangeText + ", SIZE: " + chosenSizeText);
+                dim = parseInt(this.dataset.sizeDim);
+                min = parseInt(chosenRange.dataset.rangeMin);
+                max = parseInt(chosenRange.dataset.rangeMax);
+                console.log("DIM: " + dim + ", MIN: " + min + ", MAX: " + max);
+                initClassicGame(dim, min, max);
+                document.querySelector(".menu-container").classList.add("menu-container--invisible");
             });
         });
     }
@@ -56,20 +85,9 @@ const MainMenu = function () {
         classicModeButton = null,
         classicMenu = null,
         endlessModeButton = null;
-
-    var initClassicGame = function () {
-        const gameContainer = document.createElement("div");
-        gameContainer.classList.add("game-container");
-        document.querySelector(".container").appendChild(gameContainer);
-        document.querySelector(".container").classList.add("container--visible");
-
-        let options = {
-
-        };
-        const game = new Rullo(
-            document.querySelector(".game-container"),
-            options
-        );
+    
+    var initEndlessGame = function() {
+        
     }
 
     menuContainer = document.querySelector(".menu-container");
@@ -79,21 +97,21 @@ const MainMenu = function () {
     classicMenu = document.querySelector(".classic-menu");
     endlessModeButton = document.querySelector(".endless-mode");
 
-    function hideMainMenu() {
+    function showClassicMenu() {
         mainMenu.classList.add("main-menu--invisible");
         classicMenu.classList.remove("classic-menu--invisible");
     }
 
     function hideMenuContainer() {
         menuContainer.classList.add("menu-container--invisible");
-        initClassicGame();
+//        initClassicGame();
     }
 
     classicModeButton.addEventListener("click", function () {
         this.classList.add("classic-mode--invisible");
         endlessModeButton.classList.add("endless-mode--invisible");
 
-        this.addEventListener("animationend", hideMainMenu); // hide main menu when animation is done
+        this.addEventListener("animationend", showClassicMenu); // hide main menu when animation is done
         //        initClassicGame();
     });
 
@@ -102,7 +120,7 @@ const MainMenu = function () {
         classicModeButton.classList.add("classic-mode--invisible");
         rulloLogo.classList.add("rullo-logo--invisible");
 
-        this.addEventListener("animationend", hideMenuContainer); // hide main menu container when animation is done
+        this.addEventListener("animationend", initEndlessGame); // hide main menu container when animation is done
         //        initClassicGame();
     });
 }
