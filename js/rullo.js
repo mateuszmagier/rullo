@@ -323,6 +323,7 @@ RulloBall.prototype.reset = function () {
     this.getBallElement().classList.add("ball--on");
     this.getBallElement().classList.remove("ball--locked");
     this.setEnabled(true);
+    this.setLocked(false);
 }
 
 
