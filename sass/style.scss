@@ -192,8 +192,17 @@ body {
     }
 }
 
+.game-menu-container {
+    padding: 20px 50px;
+    border: 2px solid $on-locked-border-color;
+    margin-left: 20px;
+}
+
 .timer {
     color: white;
+    font-family: "Roboto", sans-serif;
+    font-size: 2.5em;
+
     .mins {
         &:after {
             content: ":";
@@ -202,6 +211,29 @@ body {
     .secs {
         &:after {
             content: ":";
+        }
+    }
+}
+
+.game-menu {
+    margin-top: 20px;
+    text-align: center;
+
+    .menu-button {
+        color: white;
+        padding: 5px;
+        border: 2px solid $on-bg-color;
+        border-radius: 100%;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 1.8em;
+        cursor: pointer;
+        transition: background-color .2s ease-in;
+
+        &:hover {
+            background-color: $on-bg-color;
         }
     }
 }

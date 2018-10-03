@@ -1,3 +1,27 @@
+const GameMenu = function() {
+    var menuElement = null,
+        homeButton = null;
+    
+    function init() {
+        menuElement = document.createElement("div");
+        menuElement.classList.add("game-menu");
+        homeButton = document.createElement("i");
+        homeButton.classList.add("fas", "fa-home", "menu-button");
+        
+        menuElement.appendChild(homeButton);
+        
+        homeButton.addEventListener("click", function() {
+            
+        });
+    }
+    
+    init();
+    
+    this.getElement = function() {
+        return menuElement;
+    }
+}
+
 const ClassicMenu = function () {
     var classicMenu = null,
         rulloLogo = null,
@@ -17,6 +41,8 @@ const ClassicMenu = function () {
         const gameMenuContainer = document.createElement("div");
         gameMenuContainer.classList.add("game-menu-container");
         gameMenuContainer.appendChild(simpleTimer.getElement());
+        const gameMenu = new GameMenu();
+        gameMenuContainer.appendChild(gameMenu.getElement());
         
         document.querySelector(".container").appendChild(gameContainer);
         document.querySelector(".container").appendChild(gameMenuContainer);

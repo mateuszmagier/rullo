@@ -337,11 +337,36 @@ body {
   .sum--completed {
     box-shadow: 0 0 0 3px #e4d292; }
 
+.game-menu-container {
+  padding: 20px 50px;
+  border: 2px solid #e4d292;
+  margin-left: 20px; }
+
 .timer {
-  color: white; }
+  color: white;
+  font-family: "Roboto", sans-serif;
+  font-size: 2.5em; }
   .timer .mins:after {
     content: ":"; }
   .timer .secs:after {
     content: ":"; }
+
+.game-menu {
+  margin-top: 20px;
+  text-align: center; }
+  .game-menu .menu-button {
+    color: white;
+    padding: 5px;
+    border: 2px solid #df144c;
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    transition: background-color .2s ease-in; }
+    .game-menu .menu-button:hover {
+      background-color: #df144c; }
 
 /*# sourceMappingURL=style.css.map */
