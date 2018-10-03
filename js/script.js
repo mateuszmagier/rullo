@@ -1,28 +1,38 @@
-const GameMenu = function() {
+const GameMenu = function () {
     var menuElement = null,
-        homeButton = null;
+        game = null,
+        homeButton = null,
+        resetButton = null;
     
+    this.setGame = function(newGame) {
+        game = newGame;
+    }
+
     function init() {
         menuElement = document.createElement("div");
         menuElement.classList.add("game-menu");
-        homeButton = document.createElement("i");
+        homeButton = document.createElement("a");
         homeButton.classList.add("fas", "fa-home", "menu-button");
+        homeButton.setAttribute("href", "index.html");
+        resetButton = document.createElement("i");
+        resetButton.classList.add("fas", "fa-sync-alt", "menu-button");
         
-        menuElement.appendChild(homeButton);
-        
-        homeButton.addEventListener("click", function() {
-            
+        resetButton.addEventListener("click", function() {
+            game.reset();
         });
+
+        menuElement.appendChild(homeButton);
+        menuElement.appendChild(resetButton);
     }
-    
+
     init();
-    
-    this.getElement = function() {
+
+    this.getElement = function () {
         return menuElement;
     }
 }
 
-const ClassicMenu = function () {
+var ClassicMenu = function () {
     var classicMenu = null,
         rulloLogo = null,
         ranges = null,
@@ -41,13 +51,13 @@ const ClassicMenu = function () {
         const gameMenuContainer = document.createElement("div");
         gameMenuContainer.classList.add("game-menu-container");
         gameMenuContainer.appendChild(simpleTimer.getElement());
-        const gameMenu = new GameMenu();
+        const gameMenu = new GameMenu(this);
         gameMenuContainer.appendChild(gameMenu.getElement());
-        
+
         document.querySelector(".container").appendChild(gameContainer);
         document.querySelector(".container").appendChild(gameMenuContainer);
         document.querySelector(".container").classList.add("container--visible");
-        
+
 
         let options = {
             dim: dimension,
@@ -59,6 +69,8 @@ const ClassicMenu = function () {
             simpleTimer,
             options
         );
+        
+        gameMenu.setGame(game);
     }
 
     function hideMenuContainer() {
@@ -167,6 +179,6 @@ const MainMenu = function () {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const mainMenu = MainMenu();
+    const mainMenu = new MainMenu();
     const classicMenu = new ClassicMenu();
 });

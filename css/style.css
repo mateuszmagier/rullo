@@ -339,12 +339,13 @@ body {
 
 .game-menu-container {
   padding: 20px 50px;
+  padding-bottom: 0;
   border: 2px solid #e4d292;
   margin-left: 20px; }
 
 .timer {
   color: white;
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", monospace;
   font-size: 2.5em; }
   .timer .mins:after {
     content: ":"; }
@@ -353,7 +354,9 @@ body {
 
 .game-menu {
   margin-top: 20px;
-  text-align: center; }
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
   .game-menu .menu-button {
     color: white;
     padding: 5px;
@@ -364,6 +367,7 @@ body {
     line-height: 60px;
     text-align: center;
     font-size: 1.8em;
+    margin-bottom: 20px;
     cursor: pointer;
     transition: background-color .2s ease-in; }
     .game-menu .menu-button:hover {

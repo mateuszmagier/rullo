@@ -318,6 +318,13 @@ RulloBall.prototype.addMouseEvents = function () {
     }.bind(this));
 }
 
+RulloBall.prototype.reset = function () {
+    this.getBallElement().classList.remove("ball--off");
+    this.getBallElement().classList.add("ball--on");
+    this.getBallElement().classList.remove("ball--locked");
+    this.setEnabled(true);
+}
+
 
 /*
     ============
@@ -409,18 +416,6 @@ let RulloRow = function (numbersArray) {
     this.setSum = function (newSum) {
         sum = newSum;
     }
-
-    //    this.addSum = = function(sum) {
-    //        sums.push(sum);
-    //    }
-    //    
-    //    this.getSums = function() {
-    //        return sums;
-    //    }
-    //    
-    //    this.getSum = function(index) {
-    //        return sums[index];
-    //    }
 
     this.countTotalSum(); // sum all numbers in array
     this.generateTargetRowSum();
@@ -700,8 +695,8 @@ let Rullo = function (container, timer, options) {
     this.getGameContainer = function () {
         return gameContainer;
     }
-    
-    this.getGameTimer = function() {
+
+    this.getGameTimer = function () {
         return gameTimer;
     }
 
@@ -857,3 +852,24 @@ Rullo.prototype.initGameContainer = function () {
         ".row:not(:first-child):not(:last-child) .sum:last-child"
     );
 };
+
+Rullo.prototype.reset = function () {
+    console.log("reset");
+
+    // reset balls
+    [].forEach.call(this.getRows(), function (row) {
+        for (let ball of row.getBalls()) {
+            ball.reset();
+        }
+
+        // reset rows
+        row.countCurrentSum();
+        row.updateCurrentSum();
+    });
+
+    // reset columns
+    [].forEach.call(this.getColumns(), function (col) {
+        col.countCurrentSum();
+        col.updateCurrentSum();
+    });
+}
