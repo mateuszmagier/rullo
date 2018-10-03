@@ -337,4 +337,11 @@ body {
   .sum--completed {
     box-shadow: 0 0 0 3px #e4d292; }
 
+.timer {
+  color: white; }
+  .timer .mins:after {
+    content: ":"; }
+  .timer .secs:after {
+    content: ":"; }
+
 /*# sourceMappingURL=style.css.map */

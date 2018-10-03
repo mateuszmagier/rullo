@@ -1,7 +1,7 @@
 const ClassicMenu = function () {
     var classicMenu = null,
-        rulloLogo = null
-    ranges = null,
+        rulloLogo = null,
+        ranges = null,
         chosenRange = null,
         chosenRangeIndex = 1,
         chosenRangeText = "1-9",
@@ -11,10 +11,17 @@ const ClassicMenu = function () {
         chosenSizeText = "";
 
     var initClassicGame = function (dimension, minimum, maximum) {
+        const simpleTimer = new SimpleTimer();
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
+        const gameMenuContainer = document.createElement("div");
+        gameMenuContainer.classList.add("game-menu-container");
+        gameMenuContainer.appendChild(simpleTimer.getElement());
+        
         document.querySelector(".container").appendChild(gameContainer);
+        document.querySelector(".container").appendChild(gameMenuContainer);
         document.querySelector(".container").classList.add("container--visible");
+        
 
         let options = {
             dim: dimension,
@@ -23,6 +30,7 @@ const ClassicMenu = function () {
         };
         const game = new Rullo(
             document.querySelector(".game-container"),
+            simpleTimer,
             options
         );
     }

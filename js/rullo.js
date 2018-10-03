@@ -684,8 +684,9 @@ RulloColumn.prototype.updateCurrentSum = function () {
     ============
 */
 
-let Rullo = function (container, options) {
+let Rullo = function (container, timer, options) {
     var gameContainer = container, // HTML element which is a game container
+        gameTimer = timer, // SimpleTimer object
         rows = [], // array of RulloRow objects
         columns = []; // array of RulloColumn objects
 
@@ -698,6 +699,10 @@ let Rullo = function (container, options) {
 
     this.getGameContainer = function () {
         return gameContainer;
+    }
+    
+    this.getGameTimer = function() {
+        return gameTimer;
     }
 
     this.addRow = function (row) {
@@ -727,6 +732,9 @@ let Rullo = function (container, options) {
     this.initRows();
     this.initColumns();
     this.initGameContainer();
+    setTimeout(function () {
+        gameTimer.start();
+    }, 800); // game container opacity animation duration is 800ms
 };
 
 /*
@@ -788,28 +796,30 @@ Rullo.prototype.checkColumnSums = function () {
 /*
     checks if game is completed
 */
-Rullo.prototype.checkGameState = function() {
-    for(let row of this.getRows()) {
-        if(!row.getSum().isCompleted()) { // incomplete sum in row
+Rullo.prototype.checkGameState = function () {
+    for (let row of this.getRows()) {
+        if (!row.getSum().isCompleted()) { // incomplete sum in row
             return false;
-        } 
+        }
     }
-    for(let col of this.getColumns()) {
-        if(!col.getSum().isCompleted()) { // incomplete sum in column
+    for (let col of this.getColumns()) {
+        if (!col.getSum().isCompleted()) { // incomplete sum in column
             return false;
-        } 
+        }
     }
     return true;
 }
 
-Rullo.prototype.registerBallsListeners = function() {
+Rullo.prototype.registerBallsListeners = function () {
     let balls = document.querySelectorAll(".ball");
-    for(let ball of balls) {
-        ball.addEventListener("click", function() {
-            if(this.checkGameState())
-                setTimeout(function() {
+    for (let ball of balls) {
+        ball.addEventListener("click", function () {
+            if (this.checkGameState()) {
+                this.getGameTimer().stop();
+                setTimeout(function () {
                     alert("Udało się!");
                 }, 300);
+            }
         }.bind(this));
     }
 }
