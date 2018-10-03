@@ -1,6 +1,7 @@
 const ClassicMenu = function () {
     var classicMenu = null,
-        ranges = null,
+        rulloLogo = null
+    ranges = null,
         chosenRange = null,
         chosenRangeIndex = 1,
         chosenRangeText = "1-9",
@@ -8,7 +9,7 @@ const ClassicMenu = function () {
         sizes = null,
         chosenSize = null,
         chosenSizeText = "";
-    
+
     var initClassicGame = function (dimension, minimum, maximum) {
         const gameContainer = document.createElement("div");
         gameContainer.classList.add("game-container");
@@ -25,13 +26,14 @@ const ClassicMenu = function () {
             options
         );
     }
-    
+
     function hideMenuContainer() {
         menuContainer.classList.add("menu-container--invisible");
-//        initClassicGame();
+        //        initClassicGame();
     }
 
     classicMenu = document.querySelector(".classic-menu");
+    rulloLogo = document.querySelector(".rullo-logo");
     ranges = classicMenu.querySelectorAll(".range");
     chosenRange = classicMenu.querySelector(".range--chosen");
     choseRangeLine = classicMenu.querySelector(".chosen-range-line");
@@ -67,8 +69,12 @@ const ClassicMenu = function () {
                 min = parseInt(chosenRange.dataset.rangeMin);
                 max = parseInt(chosenRange.dataset.rangeMax);
                 console.log("DIM: " + dim + ", MIN: " + min + ", MAX: " + max);
-                initClassicGame(dim, min, max);
-                document.querySelector(".menu-container").classList.add("menu-container--invisible");
+                rulloLogo.classList.add("rullo-logo--invisible");
+                classicMenu.classList.add("classic-menu--fadeOut");
+                rulloLogo.addEventListener("animationend", function () {
+                    document.querySelector(".menu-container").classList.add("menu-container--invisible");
+                    initClassicGame(dim, min, max);
+                });
             });
         });
     }
@@ -85,9 +91,9 @@ const MainMenu = function () {
         classicModeButton = null,
         classicMenu = null,
         endlessModeButton = null;
-    
-    var initEndlessGame = function() {
-        
+
+    var initEndlessGame = function () {
+
     }
 
     menuContainer = document.querySelector(".menu-container");
@@ -104,7 +110,7 @@ const MainMenu = function () {
 
     function hideMenuContainer() {
         menuContainer.classList.add("menu-container--invisible");
-//        initClassicGame();
+        //        initClassicGame();
     }
 
     classicModeButton.addEventListener("click", function () {

@@ -35,12 +35,17 @@ body {
 
 .container {
     display: none;
+    opacity: 0;
 
     &--visible {
         height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
+        animation-name: gameModeFadeInAnimation;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-delay: .5s;
     }
 }
 

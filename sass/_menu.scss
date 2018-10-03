@@ -118,13 +118,17 @@
     text-align: center;
     animation-name: gameModeFadeInAnimation;
     animation-duration: 1s;
-    //    animation-delay: 1s;
     animation-fill-mode: forwards;
     opacity: 0;
 
     &--invisible {
         animation-name: none;
         display: none;
+    }
+    
+    &--fadeOut {
+        animation-name: gameModeFadeOutAnimation;
+        animation-duration: .8s;
     }
 
     .range-container {
