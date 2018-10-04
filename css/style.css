@@ -357,20 +357,57 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center; }
-  .game-menu .menu-button {
-    color: white;
-    padding: 5px;
-    border: 2px solid #df144c;
-    border-radius: 100%;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
+
+.menu-button {
+  color: white;
+  padding: 5px;
+  border: 2px solid #df144c;
+  border-radius: 100%;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color .2s ease-in; }
+  .menu-button:hover {
+    background-color: #df144c; }
+
+.result-container {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation-name: gameModeFadeInAnimation;
+  animation-duration: .5s;
+  animation-fill-mode: forwards; }
+  .result-container .result-popup {
+    position: absolute;
+    width: 60%;
     text-align: center;
-    font-size: 1.8em;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: background-color .2s ease-in; }
-    .game-menu .menu-button:hover {
-      background-color: #df144c; }
+    color: white;
+    background-color: #0c0c14;
+    border: solid 3px #df144c;
+    padding-top: 30px;
+    padding-bottom: 10px; }
+    .result-container .result-popup .result-message {
+      font-family: Lato;
+      font-size: 3em; }
+    .result-container .result-popup .result-time {
+      font-family: "Roboto", monospace;
+      font-size: 6em;
+      margin-top: 20px; }
+    .result-container .result-popup .result-menu {
+      margin-top: 20px; }
+      .result-container .result-popup .result-menu .menu-button:first-child {
+        margin-right: 10px; }
+      .result-container .result-popup .result-menu .menu-button:last-child {
+        margin-left: 10px; }
 
 /*# sourceMappingURL=style.css.map */

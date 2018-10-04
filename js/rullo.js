@@ -813,8 +813,9 @@ Rullo.prototype.registerBallsListeners = function () {
             if (this.checkGameState()) {
                 this.getGameTimer().stop();
                 setTimeout(function () {
-                    alert("Udało się!");
-                }, 300);
+                    console.log(this.getGameTimer().getStringTime());
+                    this.showResultPopup(this.getGameTimer().getStringTime());
+                }.bind(this), 300);
             }
         }.bind(this));
     }
@@ -873,4 +874,34 @@ Rullo.prototype.reset = function () {
         col.countCurrentSum();
         col.updateCurrentSum();
     });
+}
+
+Rullo.prototype.showResultPopup = function(time) {
+    let resultContainer = document.createElement("div");
+    resultContainer.classList.add("result-container");
+    let resultPopup = document.createElement("div");
+    resultPopup.classList.add("result-popup");
+    let resultMessage = document.createElement("div");
+    resultMessage.classList.add("result-message");
+    resultMessage.innerText = "Gratulacje! Twój wynik:";
+    let resultTime = document.createElement("div");
+    resultTime.classList.add("result-time");
+    resultTime.innerText = time;
+    let resultMenu = document.createElement("div");
+    resultMenu.classList.add("result-menu");
+    let homeButton = document.createElement("a");
+    homeButton.classList.add("fas", "fa-home", "menu-button");
+    homeButton.setAttribute("href", "index.html");
+    let saveButton = document.createElement("i");
+    saveButton.classList.add("fas", "fa-save", "menu-button");
+    saveButton.addEventListener("click", function() {
+        console.log("save result");
+    });
+    resultMenu.appendChild(homeButton);
+    resultMenu.appendChild(saveButton);
+    resultPopup.appendChild(resultMessage);
+    resultPopup.appendChild(resultTime);
+    resultPopup.appendChild(resultMenu);
+    resultContainer.appendChild(resultPopup);
+    document.querySelector("body").appendChild(resultContainer);
 }

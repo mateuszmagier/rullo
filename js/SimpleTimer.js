@@ -70,4 +70,10 @@ var SimpleTimer = function () {
         clearInterval(secsInterval);
         clearInterval(minsInterval);
     };
+    
+    this.getStringTime = function() {
+        let time = "";
+        time += prefixZero(mins) + ":" + prefixZero(secs) + ":" + milis;
+        return time;
+    }
 };

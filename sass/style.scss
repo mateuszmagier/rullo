@@ -221,23 +221,73 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
 
-    .menu-button {
-        color: white;
-        padding: 5px;
-        border: 2px solid $on-bg-color;
-        border-radius: 100%;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
+.menu-button {
+    color: white;
+    padding: 5px;
+    border: 2px solid $on-bg-color;
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color .2s ease-in;
+
+    &:hover {
+        background-color: $on-bg-color;
+    }
+}
+
+.result-container {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation-name: gameModeFadeInAnimation;
+    animation-duration: .5s;
+    animation-fill-mode: forwards;
+
+    .result-popup {
+        position: absolute;
+        width: 60%;
         text-align: center;
-        font-size: 1.8em;
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: background-color .2s ease-in;
+        color: white;
+        background-color: $chosen-range-bg-color;
+        border: solid 3px $on-bg-color;
+        padding-top: 30px;
+        padding-bottom: 10px;
 
-        &:hover {
-            background-color: $on-bg-color;
+        .result-message {
+            font-family: Lato;
+            font-size: 3em; //            color: $off-border-color;
+        }
+
+        .result-time {
+            font-family: "Roboto", monospace;
+            font-size: 6em;
+            margin-top: 20px; //            color: $on-locked-border-color;
+        }
+
+        .result-menu {
+            margin-top: 20px;
+
+            .menu-button {
+                &:first-child {
+                    margin-right: 10px;
+                }
+                &:last-child {
+                    margin-left: 10px;
+                }
+            }
         }
     }
 }
