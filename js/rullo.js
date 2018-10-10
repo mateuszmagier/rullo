@@ -10,7 +10,8 @@ let RulloSum = function (targetSum, currentSum) {
         currentSum = currentSum,
         currentSumElement = null,
         sumElement = null,
-        completed = false;
+        completed = false,
+        locked = false;
 
     this.getTargetSum = function () {
         return targetSum;
@@ -61,6 +62,14 @@ let RulloSum = function (targetSum, currentSum) {
         completed = bool;
     }
 
+    this.isLocked = function () {
+        return locked;
+    }
+
+    this.setLocked = function (bool) {
+        locked = bool;
+    }
+
     this.compare = function () {
         return currentSum === targetSum;
     }
@@ -83,6 +92,7 @@ RulloSum.prototype.createTargetSumElement = function () {
     number.classList.add("sum__number");
     number.textContent = this.getTargetSum();
     targetSumElem.appendChild(number);
+
     this.setTargetSumElement(targetSumElem);
 }
 
@@ -462,6 +472,7 @@ RulloRow.prototype.updateCurrentSum = function () {
         if (completed) {
             currentRowSum.parentElement.classList.add("sum--completed");
         } else {
+            this.getSum().setLocked(false);
             currentRowSum.parentElement.classList.remove("sum--completed");
         }
     }
@@ -473,9 +484,38 @@ RulloRow.prototype.updateCurrentSum = function () {
 RulloRow.prototype.createRowElement = function () {
     let rulloBall, number;
     let rulloSum, sumElementLeft, sumElementRight;
+    let timeout, requiredHoldingTime = 500;
     let row = document.createElement("div");
     row.classList.add("row");
     rulloSum = new RulloSum(this.getTargetRowSum(), this.getCurrentRowSum());
+
+    rulloSum.getTargetSumElement().addEventListener("mousedown", function () {
+        timeout = setTimeout(function () { // detect long press
+            if (rulloSum.isCompleted()) {
+                console.log("Suma kompletna");
+                if (rulloSum.isLocked()) { // user is unlocking balls in row
+                    [].forEach.call(this.getBalls(), function (ball) {
+                        ball.setLocked(false);
+                        ball.getBallElement().classList.remove("ball--locked");
+                        rulloSum.setLocked(false);
+                    });
+                } else { // user is locking all balls in row
+                    [].forEach.call(this.getBalls(), function (ball) {
+                        ball.setLocked(true);
+                        ball.getBallElement().classList.add("ball--locked");
+                        rulloSum.setLocked(true);
+                    });
+                }
+            } else {
+                console.log("Suma niekompletna");
+            }
+        }.bind(this), requiredHoldingTime);
+    }.bind(this));
+
+    rulloSum.getTargetSumElement().addEventListener("mouseup", function () {
+        clearTimeout(timeout);
+    });
+
     this.setSum(rulloSum);
     sumElementLeft = rulloSum.getSumElement();
     row.appendChild(sumElementLeft);
@@ -486,6 +526,35 @@ RulloRow.prototype.createRowElement = function () {
         row.appendChild(rulloBall.getBallElement());
     }
     sumElementRight = sumElementLeft.cloneNode(true);
+    let rightTargetSum = sumElementRight.querySelector(".sum--target");
+
+    rightTargetSum.addEventListener("mousedown", function () {
+        timeout = setTimeout(function () { // detect long press
+            if (rulloSum.isCompleted()) {
+                console.log("Suma kompletna");
+                if (rulloSum.isLocked()) { // user is unlocking balls in row
+                    [].forEach.call(this.getBalls(), function (ball) {
+                        ball.setLocked(false);
+                        ball.getBallElement().classList.remove("ball--locked");
+                        rulloSum.setLocked(false);
+                    });
+                } else { // user is locking all balls in row
+                    [].forEach.call(this.getBalls(), function (ball) {
+                        ball.setLocked(true);
+                        ball.getBallElement().classList.add("ball--locked");
+                        rulloSum.setLocked(true);
+                    });
+                }
+            } else {
+                console.log("Suma niekompletna");
+            }
+        }.bind(this), requiredHoldingTime);
+    }.bind(this));
+
+    rightTargetSum.addEventListener("mouseup", function () {
+        clearTimeout(timeout);
+    });
+
     row.appendChild(sumElementRight);
     this.setRowElement(row);
 };
@@ -615,6 +684,15 @@ let RulloColumn = function (rulloRowsArray, index) {
 
     // creates sum element for this column
     let rulloSum = new RulloSum(this.getTargetColumnSum(), this.getCurrentColumnSum());
+
+    rulloSum.getTargetSumElement().addEventListener("click", function () {
+        if (rulloSum.isCompleted()) {
+            console.log("Suma kompletna");
+        } else {
+            console.log("Suma niekompletna");
+        }
+    });
+
     this.setSum(rulloSum);
     this.setColumnElement(rulloSum.getSumElement());
 };
@@ -867,6 +945,7 @@ Rullo.prototype.reset = function () {
         // reset rows
         row.countCurrentSum();
         row.updateCurrentSum();
+        row.getSum().setLocked(false);
     });
 
     // reset columns
@@ -876,7 +955,7 @@ Rullo.prototype.reset = function () {
     });
 }
 
-Rullo.prototype.showResultPopup = function(time) {
+Rullo.prototype.showResultPopup = function (time) {
     let resultContainer = document.createElement("div");
     resultContainer.classList.add("result-container");
     let resultPopup = document.createElement("div");
@@ -894,7 +973,7 @@ Rullo.prototype.showResultPopup = function(time) {
     homeButton.setAttribute("href", "index.html");
     let saveButton = document.createElement("i");
     saveButton.classList.add("fas", "fa-save", "menu-button");
-    saveButton.addEventListener("click", function() {
+    saveButton.addEventListener("click", function () {
         console.log("save result");
     });
     resultMenu.appendChild(homeButton);
