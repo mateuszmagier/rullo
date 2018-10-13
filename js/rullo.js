@@ -353,7 +353,6 @@ let RulloRow = function (numbersArray) {
         rowElement = null, // HTML element containing balls and sums
         balls = [], // array of RulloBall objects
         sum; // RulloSum object
-    //        sums = []; // array of RulloSum objects
 
     // getters and setters for private members
     this.getNumber = function (index) {
@@ -478,7 +477,7 @@ RulloRow.prototype.updateCurrentSum = function () {
     }
 }
 
-RulloRow.prototype.addLongClickEventsForSum = function (targetSumElement) {
+RulloRow.prototype.addLongClickEvent = function (targetSumElement) {
     let timeout, requiredHoldingTime = 500;
     let rulloSum = this.getSum();
     targetSumElement.addEventListener("mousedown", function () {
@@ -521,9 +520,9 @@ RulloRow.prototype.createRowElement = function () {
     rulloSum = new RulloSum(this.getTargetRowSum(), this.getCurrentRowSum());
 
     this.setSum(rulloSum);
-    
-    this.addLongClickEventsForSum(rulloSum.getTargetSumElement());    
-    
+
+    this.addLongClickEvent(rulloSum.getTargetSumElement());
+
     sumElementLeft = rulloSum.getSumElement();
     row.appendChild(sumElementLeft);
     for (let i = 0; i < this.getNumbers().length; i++) {
@@ -534,8 +533,8 @@ RulloRow.prototype.createRowElement = function () {
     }
     sumElementRight = sumElementLeft.cloneNode(true);
     let rightTargetSum = sumElementRight.querySelector(".sum--target");
-    
-    this.addLongClickEventsForSum(rightTargetSum);
+
+    this.addLongClickEvent(rightTargetSum);
 
     row.appendChild(sumElementRight);
     this.setRowElement(row);
@@ -603,8 +602,9 @@ let RulloColumn = function (rulloRowsArray, index) {
         column = [], // all numbers in column
         targetColumnSum = -1, // target sum of "on" balls in column
         totalColumnSum = -1, // total sum of all balls in column
-        columnElement = null, // HTML element containing sum in column
-        sum; // RulloSum object
+        sum = null, // RulloSum object
+        topSumElement = null, // HTML sum element in top row
+        bottomSumElement = null; // HTML sum element in bottom row
 
     this.getRowsArray = function () {
         return rowsArray;
@@ -646,14 +646,6 @@ let RulloColumn = function (rulloRowsArray, index) {
         totalColumnSum = newTotalColumnSum;
     }
 
-    this.getColumnElement = function () {
-        return columnElement;
-    }
-
-    this.setColumnElement = function (newColumnElement) {
-        columnElement = newColumnElement;
-    }
-
     this.getSum = function () {
         return sum;
     }
@@ -662,21 +654,33 @@ let RulloColumn = function (rulloRowsArray, index) {
         sum = newSum;
     }
 
+    this.getTopSumElement = function () {
+        return topSumElement;
+    }
+
+    this.setTopSumElement = function (newTopSumElement) {
+        topSumElement = newTopSumElement;
+    }
+
+    this.getBottomSumElement = function () {
+        return bottomSumElement;
+    }
+
+    this.setBottomSumElement = function (newBottomSumElement) {
+        bottomSumElement = newBottomSumElement;
+    }
+
     this.initColumnArray();
 
     // creates sum element for this column
     let rulloSum = new RulloSum(this.getTargetColumnSum(), this.getCurrentColumnSum());
 
-    rulloSum.getTargetSumElement().addEventListener("click", function () {
-        if (rulloSum.isCompleted()) {
-            console.log("Suma kompletna");
-        } else {
-            console.log("Suma niekompletna");
-        }
-    });
-
     this.setSum(rulloSum);
-    this.setColumnElement(rulloSum.getSumElement());
+    let sumElement = rulloSum.getSumElement();
+    this.setTopSumElement(sumElement);
+    this.setBottomSumElement(sumElement.cloneNode(true));
+
+    this.addLongClickEventsForSum();
 };
 
 /*
@@ -732,6 +736,47 @@ RulloColumn.prototype.updateCurrentSum = function () {
             sumElem.classList.remove("sum--completed");
         }
     }
+}
+
+RulloColumn.prototype.addLongClickEvent = function (targetElement) {
+    let timeout, requiredHoldingTime = 500;
+
+    targetElement.addEventListener("mousedown", function () {
+        console.log("mousedown");
+        timeout = setTimeout(function () {
+            console.log("long");
+            if (this.getSum().isCompleted()) {
+                console.log("Suma kompletna");
+                if (this.getSum().isLocked()) { // user is unlocking balls in column
+                    [].forEach.call(this.getRowsArray(), function (row) {
+                        row.getBall(this.getIndex()).setLocked(false);
+                        row.getBall(this.getIndex()).getBallElement().classList.remove("ball--locked");
+                        this.getSum().setLocked(false);
+                    }.bind(this));
+                } else { // user is locking all balls in column
+                    [].forEach.call(this.getRowsArray(), function (row) {
+                        row.getBall(this.getIndex()).setLocked(true);
+                        row.getBall(this.getIndex()).getBallElement().classList.add("ball--locked");
+                        this.getSum().setLocked(true);
+                    }.bind(this));
+                }
+            } else {
+                console.log("Suma niekompletna");
+            }
+        }.bind(this), requiredHoldingTime);
+    }.bind(this));
+
+    targetElement.addEventListener("mouseup", function () {
+        console.log("mouseup");
+        clearTimeout(timeout);
+    });
+}
+
+RulloColumn.prototype.addLongClickEventsForSum = function () {
+    let topTargetSum = this.getTopSumElement().querySelector(".sum--target");
+    let bottomTargetSum = this.getBottomSumElement().querySelector(".sum--target");
+    this.addLongClickEvent(topTargetSum);
+    this.addLongClickEvent(bottomTargetSum);
 }
 
 /*
@@ -882,24 +927,45 @@ Rullo.prototype.registerBallsListeners = function () {
 }
 
 /*
+    creates content of row containing sums
+*/
+Rullo.prototype.createSumRow = function (isTop) {
+    let row = document.createElement("div");
+    row.classList.add("row");
+    if (isTop) {
+        for (let i = 0; i < this.getColumns().length; i++) {
+            sumElement = this.getColumn(i).getTopSumElement();
+            row.appendChild(sumElement);
+        }
+    } else {
+        for (let i = 0; i < this.getColumns().length; i++) {
+            sumElement = this.getColumn(i).getBottomSumElement();
+            row.appendChild(sumElement);
+        }
+    }
+    return row;
+};
+
+/*
     creates HTML elements for balls (and rows) and adds them to the game container
 */
 Rullo.prototype.initGameContainer = function () {
     let row, col, sumElementTop, sumElementBottom, ball;
+    let topSumRow, bottomSumRow;
 
-    let rowCol = document.createElement("div");
-    rowCol.classList.add("row");
-    for (let i = 0; i < this.getColumns().length; i++) {
-        sumElementTop = this.getColumn(i).getColumnElement();
-        rowCol.appendChild(sumElementTop);
-    }
-    this.getGameContainer().appendChild(rowCol);
+    // add top sum row
+    topSumRow = this.createSumRow(true);
+    this.getGameContainer().appendChild(topSumRow);
 
+    // add rows containing balls
     for (let i = 0; i < this.getRows().length; i++) {
         this.getGameContainer().appendChild(this.getRow(i).getRowElement());
     }
 
-    this.getGameContainer().appendChild(rowCol.cloneNode(true));
+    // add bottom sum row
+    bottomSumRow = this.createSumRow(false);
+    this.getGameContainer().appendChild(bottomSumRow);
+
     this.checkColumnSums();
     this.registerBallsListeners();
 
