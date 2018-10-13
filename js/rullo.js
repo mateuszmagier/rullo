@@ -312,6 +312,7 @@ RulloBall.prototype.addMouseEvents = function () {
                 ballElem.classList.remove("ball--locked");
                 this.setLocked(false);
             } else { // lock ball
+                console.log(JSON.stringify(this));
                 ballElem.classList.add("ball--locked");
                 this.setLocked(true);
             }
@@ -334,6 +335,10 @@ RulloBall.prototype.reset = function () {
     this.getBallElement().classList.remove("ball--locked");
     this.setEnabled(true);
     this.setLocked(false);
+}
+
+RulloBall.prototype.toJSON = function () {
+    return "Jestem JSONem";
 }
 
 
@@ -911,6 +916,35 @@ Rullo.prototype.checkGameState = function () {
     return true;
 }
 
+/*
+    update games counter, update game mode wins counter, save game result
+*/
+Rullo.prototype.saveGameResult = function () {
+    // increment number of games
+    let gamesNumber = localStorage.getItem("gamesNumber");
+    if (gamesNumber === null)
+        gamesNumber = 0;
+    localStorage.setItem("gamesNumber", ++gamesNumber);
+    
+    // increment number of wins in current game mode
+    let mode = "dim-" + this.options.dim + "-min-" + this.options.min + "-max-" + this.options.max;
+    let modeWinsNumber = localStorage.getItem(mode);
+    if(modeWinsNumber === null)
+        modeWinsNumber = 0;
+    ++modeWinsNumber;
+    localStorage.setItem(mode, modeWinsNumber);
+    
+    // save game result
+    let result = new RulloResult(this.options.dim,
+        this.options.min,
+        this.options.max,
+        true,
+        this.getGameTimer().getStringTime());
+    console.log(result);
+    console.log(JSON.stringify(result));
+    localStorage.setItem("game-" + gamesNumber, JSON.stringify(result));
+}
+
 Rullo.prototype.registerBallsListeners = function () {
     let balls = document.querySelectorAll(".ball");
     for (let ball of balls) {
@@ -920,6 +954,7 @@ Rullo.prototype.registerBallsListeners = function () {
                 setTimeout(function () {
                     console.log(this.getGameTimer().getStringTime());
                     this.showResultPopup(this.getGameTimer().getStringTime());
+                    this.saveGameResult();
                 }.bind(this), 300);
             }
         }.bind(this));

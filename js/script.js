@@ -99,6 +99,8 @@ var ClassicMenu = function () {
                     chosenRange = this;
                     chosenRangeText = chosenRange.innerText;
                     chosenRange.classList.add("range--chosen");
+                    
+                    setWinsNumber();
                 }
             });
         });
@@ -124,9 +126,25 @@ var ClassicMenu = function () {
             });
         });
     }
+    
+    function setWinsNumber() {
+        [].forEach.call(sizes, function(size) {
+            let dim = size.dataset.sizeDim;
+            let min = chosenRange.dataset.rangeMin;
+            let max = chosenRange.dataset.rangeMax;
+            
+            let modeName = "dim-" + dim + "-min-" + min + "-max-" + max;
+            let modeWinsNumber = localStorage.getItem(modeName);
+            if(modeWinsNumber === null)
+                modeWinsNumber = 0;
+            let modeWinsNumberElement = size.parentElement.querySelector(".size-wins-number");
+            modeWinsNumberElement.innerText = modeWinsNumber;
+        });
+    }
 
     registerRangeClickListeners();
     registerSizeClickListeners();
+    setWinsNumber();
 }
 
 
