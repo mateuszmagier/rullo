@@ -478,6 +478,37 @@ RulloRow.prototype.updateCurrentSum = function () {
     }
 }
 
+RulloRow.prototype.addLongClickEventsForSum = function (targetSumElement) {
+    let timeout, requiredHoldingTime = 500;
+    let rulloSum = this.getSum();
+    targetSumElement.addEventListener("mousedown", function () {
+        timeout = setTimeout(function () { // detect long press
+            if (rulloSum.isCompleted()) {
+                console.log("Suma kompletna");
+                if (rulloSum.isLocked()) { // user is unlocking balls in row
+                    [].forEach.call(this.getBalls(), function (ball) {
+                        ball.setLocked(false);
+                        ball.getBallElement().classList.remove("ball--locked");
+                        rulloSum.setLocked(false);
+                    });
+                } else { // user is locking all balls in row
+                    [].forEach.call(this.getBalls(), function (ball) {
+                        ball.setLocked(true);
+                        ball.getBallElement().classList.add("ball--locked");
+                        rulloSum.setLocked(true);
+                    });
+                }
+            } else {
+                console.log("Suma niekompletna");
+            }
+        }.bind(this), requiredHoldingTime);
+    }.bind(this));
+
+    targetSumElement.addEventListener("mouseup", function () {
+        clearTimeout(timeout);
+    });
+};
+
 /*
     creates and returns HTML element of row containing balls and sums
 */
@@ -489,34 +520,10 @@ RulloRow.prototype.createRowElement = function () {
     row.classList.add("row");
     rulloSum = new RulloSum(this.getTargetRowSum(), this.getCurrentRowSum());
 
-    rulloSum.getTargetSumElement().addEventListener("mousedown", function () {
-        timeout = setTimeout(function () { // detect long press
-            if (rulloSum.isCompleted()) {
-                console.log("Suma kompletna");
-                if (rulloSum.isLocked()) { // user is unlocking balls in row
-                    [].forEach.call(this.getBalls(), function (ball) {
-                        ball.setLocked(false);
-                        ball.getBallElement().classList.remove("ball--locked");
-                        rulloSum.setLocked(false);
-                    });
-                } else { // user is locking all balls in row
-                    [].forEach.call(this.getBalls(), function (ball) {
-                        ball.setLocked(true);
-                        ball.getBallElement().classList.add("ball--locked");
-                        rulloSum.setLocked(true);
-                    });
-                }
-            } else {
-                console.log("Suma niekompletna");
-            }
-        }.bind(this), requiredHoldingTime);
-    }.bind(this));
-
-    rulloSum.getTargetSumElement().addEventListener("mouseup", function () {
-        clearTimeout(timeout);
-    });
-
     this.setSum(rulloSum);
+    
+    this.addLongClickEventsForSum(rulloSum.getTargetSumElement());    
+    
     sumElementLeft = rulloSum.getSumElement();
     row.appendChild(sumElementLeft);
     for (let i = 0; i < this.getNumbers().length; i++) {
@@ -527,33 +534,8 @@ RulloRow.prototype.createRowElement = function () {
     }
     sumElementRight = sumElementLeft.cloneNode(true);
     let rightTargetSum = sumElementRight.querySelector(".sum--target");
-
-    rightTargetSum.addEventListener("mousedown", function () {
-        timeout = setTimeout(function () { // detect long press
-            if (rulloSum.isCompleted()) {
-                console.log("Suma kompletna");
-                if (rulloSum.isLocked()) { // user is unlocking balls in row
-                    [].forEach.call(this.getBalls(), function (ball) {
-                        ball.setLocked(false);
-                        ball.getBallElement().classList.remove("ball--locked");
-                        rulloSum.setLocked(false);
-                    });
-                } else { // user is locking all balls in row
-                    [].forEach.call(this.getBalls(), function (ball) {
-                        ball.setLocked(true);
-                        ball.getBallElement().classList.add("ball--locked");
-                        rulloSum.setLocked(true);
-                    });
-                }
-            } else {
-                console.log("Suma niekompletna");
-            }
-        }.bind(this), requiredHoldingTime);
-    }.bind(this));
-
-    rightTargetSum.addEventListener("mouseup", function () {
-        clearTimeout(timeout);
-    });
+    
+    this.addLongClickEventsForSum(rightTargetSum);
 
     row.appendChild(sumElementRight);
     this.setRowElement(row);
