@@ -3,39 +3,59 @@
     animation-name: gameModeFadeInAnimation;
     animation-duration: 1s;
     animation-fill-mode: forwards;
-    opacity: 0;
+    opacity: 1;
+    transition: opacity .3s ease-out;
 }
 
-.results-group {
-    
-}
+.results-group {}
 
 .result {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    
+    background-color: black;
+    opacity: 1;
+
+    .result-number {
+        padding: 0 15px;
+    }
+
     .result-effect {
-        width: 60px;
+        width: 5px;
         height: 30px;
         display: inline-block;
-        
+
         &.win {
             background-color: green;
         }
-        
+
         &.defeat {
             background-color: red;
         }
     }
-    
+
     .result-time {
+        flex-grow: 1;
         color: white;
         font-size: 1.3em;
         letter-spacing: 1px;
-        text-align: left;
-        padding-left: 10px;
         display: inline-block;
+        font-family: "Roboto", monospace;
+    }
+
+    .result-datetime {
+        flex-grow: 1;
+    }
+
+    .result-remove {
+        padding: 0 15px;
+        color: red;
+        cursor: pointer;
+    }
+
+    &.removed {
+        opacity: 0;
+        transition: opacity .3s ease-out;
     }
 }
 
@@ -53,7 +73,7 @@
     text-align: center;
     border: 2px solid $on-bg-color;
     transition: background-color .2s ease-in;
-    
+
     &:hover {
         background-color: $on-bg-color;
     }

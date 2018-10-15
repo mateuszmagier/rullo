@@ -238,14 +238,19 @@
   animation-name: gameModeFadeInAnimation;
   animation-duration: 1s;
   animation-fill-mode: forwards;
-  opacity: 0; }
+  opacity: 1;
+  transition: opacity .3s ease-out; }
 
 .result {
   margin-bottom: 10px;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  background-color: black;
+  opacity: 1; }
+  .result .result-number {
+    padding: 0 15px; }
   .result .result-effect {
-    width: 60px;
+    width: 5px;
     height: 30px;
     display: inline-block; }
     .result .result-effect.win {
@@ -253,12 +258,21 @@
     .result .result-effect.defeat {
       background-color: red; }
   .result .result-time {
+    flex-grow: 1;
     color: white;
     font-size: 1.3em;
     letter-spacing: 1px;
-    text-align: left;
-    padding-left: 10px;
-    display: inline-block; }
+    display: inline-block;
+    font-family: "Roboto", monospace; }
+  .result .result-datetime {
+    flex-grow: 1; }
+  .result .result-remove {
+    padding: 0 15px;
+    color: red;
+    cursor: pointer; }
+  .result.removed {
+    opacity: 0;
+    transition: opacity .3s ease-out; }
 
 .clr-button {
   color: white;
