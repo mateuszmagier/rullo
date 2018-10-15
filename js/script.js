@@ -3,8 +3,8 @@ const GameMenu = function () {
         game = null,
         homeButton = null,
         resetButton = null;
-    
-    this.setGame = function(newGame) {
+
+    this.setGame = function (newGame) {
         game = newGame;
     }
 
@@ -16,8 +16,8 @@ const GameMenu = function () {
         homeButton.setAttribute("href", "index.html");
         resetButton = document.createElement("i");
         resetButton.classList.add("fas", "fa-sync-alt", "menu-button");
-        
-        resetButton.addEventListener("click", function() {
+
+        resetButton.addEventListener("click", function () {
             game.reset();
         });
 
@@ -69,7 +69,7 @@ var ClassicMenu = function () {
             simpleTimer,
             options
         );
-        
+
         gameMenu.setGame(game);
     }
 
@@ -99,7 +99,7 @@ var ClassicMenu = function () {
                     chosenRange = this;
                     chosenRangeText = chosenRange.innerText;
                     chosenRange.classList.add("range--chosen");
-                    
+
                     setWinsNumber();
                 }
             });
@@ -126,16 +126,16 @@ var ClassicMenu = function () {
             });
         });
     }
-    
+
     function setWinsNumber() {
-        [].forEach.call(sizes, function(size) {
+        [].forEach.call(sizes, function (size) {
             let dim = size.dataset.sizeDim;
             let min = chosenRange.dataset.rangeMin;
             let max = chosenRange.dataset.rangeMax;
-            
+
             let modeName = "dim-" + dim + "-min-" + min + "-max-" + max;
             let modeWinsNumber = localStorage.getItem(modeName);
-            if(modeWinsNumber === null)
+            if (modeWinsNumber === null)
                 modeWinsNumber = 0;
             let modeWinsNumberElement = size.parentElement.querySelector(".size-wins-number");
             modeWinsNumberElement.innerText = modeWinsNumber;
@@ -154,18 +154,25 @@ const MainMenu = function () {
         rulloLogo = null,
         classicModeButton = null,
         classicMenu = null,
-        endlessModeButton = null;
+        endlessModeButton = null,
+        tutorialButton = null,
+        resultsButton = null,
+        resultsContainer = null,
+        gameResultsHelper = null;
 
     var initEndlessGame = function () {
 
     }
 
     menuContainer = document.querySelector(".menu-container");
+    resultsContainer = document.querySelector(".results-container");
     mainMenu = document.querySelector(".main-menu");
     rulloLogo = document.querySelector(".rullo-logo");
     classicModeButton = document.querySelector(".classic-mode");
     classicMenu = document.querySelector(".classic-menu");
     endlessModeButton = document.querySelector(".endless-mode");
+    tutorialButton = document.querySelector(".tutorial");
+    resultsButton = document.querySelector(".results");
 
     function showClassicMenu() {
         mainMenu.classList.add("main-menu--invisible");
@@ -177,21 +184,40 @@ const MainMenu = function () {
         //        initClassicGame();
     }
 
-    classicModeButton.addEventListener("click", function () {
-        this.classList.add("classic-mode--invisible");
-        endlessModeButton.classList.add("endless-mode--invisible");
+    function showResultsContainer() {
+        mainMenu.classList.add("main-menu--invisible");
+        
+        gameResultsHelper = new GameResultsHelper();
+        resultsContainer.appendChild(gameResultsHelper.createElement());
+        resultsContainer.appendChild(GameResultView.createClearButton());
+        resultsContainer.classList.remove("invisible");
+    }
 
+    function hideMainMenuButtons() {
+        endlessModeButton.classList.add("main-menu-item--invisible");
+        tutorialButton.classList.add("main-menu-item--invisible");
+        resultsButton.classList.add("main-menu-item--invisible");
+        classicModeButton.classList.add("main-menu-item--invisible");
+    }
+
+    classicModeButton.addEventListener("click", function () {
+        hideMainMenuButtons();
         this.addEventListener("animationend", showClassicMenu); // hide main menu when animation is done
-        //        initClassicGame();
     });
 
     endlessModeButton.addEventListener("click", function () {
-        this.classList.add("endless-mode--invisible");
-        classicModeButton.classList.add("classic-mode--invisible");
         rulloLogo.classList.add("rullo-logo--invisible");
-
+        hideMainMenuButtons();
         this.addEventListener("animationend", initEndlessGame); // hide main menu container when animation is done
-        //        initClassicGame();
+    });
+
+    tutorialButton.addEventListener("click", function () {
+        hideMainMenuButtons();
+    });
+    
+    resultsButton.addEventListener("click", function () {
+        hideMainMenuButtons();
+        this.addEventListener("animationend", showResultsContainer);
     });
 }
 

@@ -916,6 +916,23 @@ Rullo.prototype.checkGameState = function () {
     return true;
 }
 
+function prefixZero(number) {
+    if (number < 10)
+        return "0" + number;
+    return number;
+}
+
+function formatDate(date) {
+    var secs = prefixZero(date.getSeconds());
+    var mins = prefixZero(date.getMinutes());
+    var hours = prefixZero(date.getHours());
+    var day = prefixZero(date.getDate());
+    var month = prefixZero(date.getMonth() + 1);
+    var year = date.getFullYear();
+
+    return year + "/" + month + "/" + day + " " + hours + ":" + mins + ":" + secs;
+}
+
 /*
     update games counter, update game mode wins counter, save game result
 */
@@ -925,21 +942,23 @@ Rullo.prototype.saveGameResult = function () {
     if (gamesNumber === null)
         gamesNumber = 0;
     localStorage.setItem("gamesNumber", ++gamesNumber);
-    
+
     // increment number of wins in current game mode
     let mode = "dim-" + this.options.dim + "-min-" + this.options.min + "-max-" + this.options.max;
     let modeWinsNumber = localStorage.getItem(mode);
-    if(modeWinsNumber === null)
+    if (modeWinsNumber === null)
         modeWinsNumber = 0;
     ++modeWinsNumber;
     localStorage.setItem(mode, modeWinsNumber);
     
-    // save game result
-    let result = new RulloResult(this.options.dim,
-        this.options.min,
-        this.options.max,
-        true,
-        this.getGameTimer().getStringTime());
+    let result = {
+        dim: this.options.dim,
+        min: this.options.min,
+        max: this.options.max,
+        isWin: true,
+        time: this.getGameTimer().getStringTime(),
+        datetime: formatDate(new Date())
+    };
     console.log(result);
     console.log(JSON.stringify(result));
     localStorage.setItem("game-" + gamesNumber, JSON.stringify(result));

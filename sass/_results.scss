@@ -1,0 +1,60 @@
+.results-container {
+    margin-top: 70px;
+    animation-name: gameModeFadeInAnimation;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+
+.results-group {
+    
+}
+
+.result {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    
+    .result-effect {
+        width: 60px;
+        height: 30px;
+        display: inline-block;
+        
+        &.win {
+            background-color: green;
+        }
+        
+        &.defeat {
+            background-color: red;
+        }
+    }
+    
+    .result-time {
+        color: white;
+        font-size: 1.3em;
+        letter-spacing: 1px;
+        text-align: left;
+        padding-left: 10px;
+        display: inline-block;
+    }
+}
+
+.clr-button {
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    letter-spacing: 1px;
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 2px solid $on-bg-color;
+    transition: background-color .2s ease-in;
+    
+    &:hover {
+        background-color: $on-bg-color;
+    }
+}

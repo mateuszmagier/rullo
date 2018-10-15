@@ -8,6 +8,7 @@ $chosen-range-bg-color: #0c0c14;
 
 @import 'keyframes';
 @import 'menu';
+@import 'results';
 
 @mixin generalStyles {
     width: $size;

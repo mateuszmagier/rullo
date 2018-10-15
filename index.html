@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Rullo</title>
     <script src="js/SimpleTimer.js" type="text/javascript"></script>
-    <script src="js/RulloResult.js" type="text/javascript"></script>
+    <script src="js/GameResult.js" type="text/javascript"></script>
     <script src="js/rullo.js" type="text/javascript"></script>
     <script src="js/script.js" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,700,900" rel="stylesheet">
@@ -17,8 +17,14 @@
     <div class="menu-container">
         <div class="rullo-logo"><span>RULLO</span></div>
         <div class="main-menu">
-            <div class="game-mode classic-mode"><span class="game-mode-name">tryb<br/>klasyczny</span></div>
-            <div class="game-mode endless-mode"><span class="game-mode-name">tryb<br/>endless</span></div>
+            <div class="main-menu-row">
+                <div class="main-menu-item game-mode classic-mode"><span class="main-menu-item-name">tryb<br/>klasyczny</span></div>
+                <div class="main-menu-item game-mode endless-mode"><span class="main-menu-item-name">tryb<br/>endless</span></div>
+            </div>
+            <div class="main-menu-row">
+                <div class="main-menu-item tutorial"><span class="main-menu-item-name">jak grać</span></div>
+                <div class="main-menu-item results"><span class="main-menu-item-name">wyniki</span></div>
+            </div>
         </div>
         <div class="classic-menu classic-menu--invisible">
             <div class="range-container">
@@ -52,9 +58,10 @@
                 </div>
             </div>
         </div>
+        <div class="results-container invisible"></div>
     </div>
     <div class="container"></div>
-<!--
+    <!--
     <div class="result-container">
         <div class="result-popup">
             <div class="result-message">Gratulacje! Twój wynik:</div>

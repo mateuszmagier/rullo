@@ -55,15 +55,20 @@
     width: 65%;
     margin: 0 auto;
     margin-top: 70px;
-    display: flex;
-    justify-content: center;
 
     &--invisible {
         display: none;
     }
 }
 
-.game-mode {
+.main-menu-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.main-menu-item {
     border: solid 2px $on-bg-color;
     border-radius: 100%;
     width: 150px;
@@ -78,33 +83,65 @@
     animation-duration: .8s;
     animation-fill-mode: forwards;
 
-    &.classic-mode {
-        animation-delay: 3.6s;
-        margin-right: 20px;
 
-        &--invisible {
-            opacity: 1;
-            animation-name: gameModeFadeOutLeftAnimation;
-            animation-delay: 0s;
-        }
+
+    &:first-child {
+        margin-right: 20px;
+    }
+
+    &:last-child {
+        margin-left: 20px;
+    }
+
+    &.classic-mode {
+        animation-delay: 3s;
     }
 
     &.endless-mode {
-        animation-delay: 4s;
-        margin-left: 20px;
+        animation-delay: 3.4s;
+    }
 
-        &--invisible {
-            opacity: 1;
-            animation-name: gameModeFadeOutRightAnimation;
-            animation-delay: 0s;
-        }
+    &.tutorial {
+        animation-delay: 3.8s;
+    }
+
+    &.results {
+        animation-delay: 4.2s;
     }
 
     &:hover {
         background-color: $on-bg-color;
     }
 
-    .game-mode-name {
+    &--invisible {
+        opacity: 1;
+
+        &.classic-mode {
+            animation-delay: 0.2s;
+        }
+
+        &.endless-mode {
+            animation-delay: 0.2s;
+        }
+
+        &.tutorial {
+            animation-delay: 0.2s;
+        }
+
+        &.results {
+            animation-delay: 0.2s;
+        }
+
+        &:first-child {
+            animation-name: gameModeFadeOutLeftAnimation;
+        }
+
+        &:last-child {
+            animation-name: gameModeFadeOutRightAnimation;
+        }
+    }
+
+    .main-menu-item-name {
         text-transform: uppercase;
         font-size: 1.2em;
     }
@@ -125,7 +162,7 @@
         animation-name: none;
         display: none;
     }
-    
+
     &--fadeOut {
         animation-name: gameModeFadeOutAnimation;
         animation-duration: .8s;
@@ -215,4 +252,9 @@
             font-size: 0.9em;
         }
     }
+}
+
+.invisible {
+    display: none;
+    animation-name: none;
 }
