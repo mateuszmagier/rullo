@@ -185,11 +185,6 @@ const ResultsMenu = function () {
             }
         }
         resultsContainer.appendChild(resultsGroupsWrapper);
-
-        // add static position to the longest results group (clear button positioning issue)
-        if (GameResultsHelper.maxGroup === null)
-            GameResultsHelper.maxGroup = resultsGroupsWrapper.children[0];
-        GameResultsHelper.maxGroup.classList.add("results-group--longest");
     }
 
     function updateActiveGroup() {
@@ -234,10 +229,13 @@ const ResultsMenu = function () {
 
     loadAllResultsGroups();
     updateActiveGroup();
+
     let buttonsContainer = document.createElement("div");
     buttonsContainer.classList.add("buttons-container");
     buttonsContainer.appendChild(GameResultView.createClearButton());
-    resultsContainer.appendChild(buttonsContainer);
+    buttonsContainer.appendChild(GameResultView.createExportButton());
+    buttonsContainer.appendChild(GameResultView.createImportButton());
+    resultsContainer.insertBefore(buttonsContainer, resultsContainer.querySelector(".results-menu"));
     resultsContainer.classList.remove("invisible");
 };
 

@@ -309,8 +309,6 @@
     opacity: 1;
     display: block;
     transition: opacity .3s ease-in; }
-  .results-group--longest {
-    position: static; }
 
 .result {
   margin-bottom: 10px;
@@ -347,12 +345,13 @@
     transition: all .5s ease-out; }
 
 .buttons-container {
-  width: 100%;
   text-align: center;
   display: flex;
-  margin-top: 20px; }
+  justify-content: space-between;
+  margin: 20px 0; }
   .buttons-container .button {
     color: white;
+    cursor: pointer;
     text-decoration: none;
     text-transform: uppercase;
     display: block;

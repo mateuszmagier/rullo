@@ -123,7 +123,28 @@ GameResultView.createClearButton = function () {
 
 GameResultView.createExportButton = function () {
     let button = document.createElement("a");
-    button.classList.add("export-button");
+    button.classList.add("export-button", "button");
+    button.innerText = "eksportuj";
+    
+    // eksport do pliku JSON
+    button.addEventListener("click", function (e) {
+        e.preventDefault();
+    });
+    
+    return button;
+}
+
+GameResultView.createImportButton = function () {
+    let button = document.createElement("a");
+    button.classList.add("import-button", "button");
+    button.innerText = "importuj";
+    
+    // import z pliku JSON
+    button.addEventListener("click", function (e) {
+        e.preventDefault();
+    });
+    
+    return button;
 }
 
 const GameResultsHelper = function () {
@@ -186,18 +207,9 @@ const GameResultsHelper = function () {
             element.innerText = "Brak rezultatów."
         }
 
-        // update maximum group count and element
-        if (modeResults.length > GameResultsHelper.maxGroupCount) {
-            GameResultsHelper.maxGroupCount = modeResults.length;
-            GameResultsHelper.maxGroup = element;
-        }
-
         return element;
     }
 
     fetchGamesNumber();
     fetchAllResults();
 }
-
-GameResultsHelper.maxGroupCount = 0;
-GameResultsHelper.maxGroup = null;

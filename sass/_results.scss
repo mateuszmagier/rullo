@@ -110,10 +110,6 @@
         display: block;
         transition: opacity .3s ease-in;
     }
-
-    &--longest {
-        position: static;
-    }
 }
 
 .result {
@@ -168,13 +164,15 @@
 }
 
 .buttons-container {
-    width: 100%;
+//    width: 100%;
     text-align: center; //    margin: 0 auto;
     display: flex;
-    margin-top: 20px;
+    justify-content: space-between;
+    margin: 20px 0;
 
     .button {
         color: white;
+        cursor: pointer;
         text-decoration: none;
         text-transform: uppercase;
         display: block;
