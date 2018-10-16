@@ -111,11 +111,13 @@ const GameResultView = function (json, counter) {
 GameResultView.createClearButton = function () {
     let button = document.createElement("a");
     button.classList.add("clr-button", "button");
-    button.setAttribute("href", "index1.html");
+    button.setAttribute("href", "index.html");
     button.innerText = "wyczyść wyniki";
 
     button.addEventListener("click", function (e) {
         e.preventDefault();
+        localStorage.clear();
+        window.location = this.getAttribute("href");
     });
 
     return button;
