@@ -16,7 +16,7 @@ const GameResultView = function (json, counter) {
         element.innerText = counter;
 
         // debugging
-        element.innerText += " ||| " + model.dim + "x" + model.dim + " " + model.min + "-" + model.max;
+        //        element.innerText += " ||| " + model.dim + "x" + model.dim + " " + model.min + "-" + model.max;
 
         numberElement = element;
     }
@@ -62,7 +62,7 @@ const GameResultView = function (json, counter) {
             let resultElement = this.parentElement;
             resultElement.classList.add("removed");
             localStorage.removeItem(resultName);
-            
+
             resultElement.addEventListener("transitionend", function () {
                 console.dir(resultElement.parentElement);
                 let resultsGroup = resultElement.parentElement;
@@ -125,14 +125,17 @@ GameResultView.createClearButton = function () {
 
 GameResultView.createExportButton = function () {
     let button = document.createElement("a");
+    let file = new Blob([GameResultsHelper.jsonString], {type: 'text/plain'});
     button.classList.add("export-button", "button");
+    button.setAttribute("href", URL.createObjectURL(file));
+    button.setAttribute("download", "export.json");
     button.innerText = "eksportuj";
-    
+
     // eksport do pliku JSON
-    button.addEventListener("click", function (e) {
-        e.preventDefault();
-    });
-    
+//    button.addEventListener("click", function (e) {
+////        e.preventDefault();
+//    });
+
     return button;
 }
 
@@ -140,12 +143,12 @@ GameResultView.createImportButton = function () {
     let button = document.createElement("a");
     button.classList.add("import-button", "button");
     button.innerText = "importuj";
-    
+
     // import z pliku JSON
     button.addEventListener("click", function (e) {
         e.preventDefault();
     });
-    
+
     return button;
 }
 
@@ -181,6 +184,15 @@ const GameResultsHelper = function () {
         }
     }
 
+    function printJSON() {
+        let json = "[";
+        for (let i = 0; i < results.length - 1; i++)
+            json += JSON.stringify(results[i]) + ",";
+        json += JSON.stringify(results[results.length - 1]) + "]"; // last object - without comma
+        console.log(json);
+        GameResultsHelper.jsonString = json;
+    }
+
     function fetchResultsFromMode(dim, min, max) {
         let modeResults = [];
         for (result of results) {
@@ -214,4 +226,5 @@ const GameResultsHelper = function () {
 
     fetchGamesNumber();
     fetchAllResults();
+    printJSON();
 }
