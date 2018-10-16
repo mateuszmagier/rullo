@@ -241,6 +241,75 @@
   opacity: 1;
   transition: opacity .3s ease-out; }
 
+.results-menu .ranges {
+  width: 100%;
+  display: flex;
+  position: relative;
+  margin-bottom: 5px; }
+  .results-menu .ranges .range {
+    width: 33.33333%;
+    font-size: 1.3em;
+    padding: 10px 0;
+    cursor: pointer; }
+  .results-menu .ranges .chosen-range-bg {
+    width: 33.33333%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #df144c;
+    z-index: -1;
+    transition: transform .3s ease-in; }
+    .results-menu .ranges .chosen-range-bg-1 {
+      transform: translateX(0); }
+    .results-menu .ranges .chosen-range-bg-2 {
+      transform: translateX(100%); }
+    .results-menu .ranges .chosen-range-bg-3 {
+      transform: translateX(200%); }
+.results-menu .sizes {
+  width: 100%;
+  display: flex;
+  position: relative; }
+  .results-menu .sizes .size {
+    width: 25%;
+    padding: 5px 0;
+    cursor: pointer; }
+  .results-menu .sizes .chosen-size-bg {
+    width: 25%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #df144c;
+    z-index: -1;
+    transition: transform .3s ease-in; }
+    .results-menu .sizes .chosen-size-bg-1 {
+      transform: translateX(0); }
+    .results-menu .sizes .chosen-size-bg-2 {
+      transform: translateX(100%); }
+    .results-menu .sizes .chosen-size-bg-3 {
+      transform: translateX(200%); }
+    .results-menu .sizes .chosen-size-bg-4 {
+      transform: translateX(300%); }
+
+.results-groups-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 20px; }
+
+.results-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity .3s ease-out; }
+  .results-group--chosen {
+    opacity: 1;
+    transition: opacity .3s ease-in; }
+  .results-group--longest {
+    position: static; }
+
 .result {
   margin-bottom: 10px;
   display: flex;
@@ -272,7 +341,8 @@
     cursor: pointer; }
   .result.removed {
     opacity: 0;
-    transition: opacity .3s ease-out; }
+    transform: translateX(20px);
+    transition: all .5s ease-out; }
 
 .clr-button {
   color: white;

@@ -147,6 +147,95 @@ var ClassicMenu = function () {
     setWinsNumber();
 }
 
+const ResultsMenu = function () {
+    var resultsContainer = document.querySelector(".results-container"),
+        gameResultsHelper = new GameResultsHelper(),
+        ranges = resultsContainer.querySelectorAll(".range"),
+        sizes = resultsContainer.querySelectorAll(".size"),
+        chosenRange = resultsContainer.querySelector(".range--chosen"),
+        chosenSize = resultsContainer.querySelector(".size--chosen"),
+        chosenRangeBg = resultsContainer.querySelector(".chosen-range-bg"),
+        chosenSizeBg = resultsContainer.querySelector(".chosen-size-bg"),
+        chosenGroup = null;
+//        chosenGroup = resultsContainer.querySelector("[data-group-name=\"dim-5-min-1-max-9\"]");
+
+    function loadAllResultsGroups() {
+        let resultsGroup;
+        let resultsGroupsWrapper = document.createElement("div");
+        resultsGroupsWrapper.classList.add("results-groups-wrapper");
+        let allDimensions = [5, 6, 7, 8];
+        let allRanges = [
+            {
+                min: 1,
+                max: 9
+            },
+            {
+                min: 1,
+                max: 19
+            },
+            {
+                min: 2,
+                max: 4
+            }
+        ];
+        for (dim of allDimensions) {
+            for (range of allRanges) {
+                resultsGroup = gameResultsHelper.getResultsView(dim, range.min, range.max);
+                resultsGroupsWrapper.appendChild(resultsGroup);
+            }
+        }
+        resultsContainer.appendChild(resultsGroupsWrapper);
+        
+        // add static position to the longest results group (clear button positioning issue)
+        GameResultsHelper.maxGroup.classList.add("results-group--longest");
+    }
+    
+    function updateActiveGroup() {
+        let dim = chosenSize.dataset.sizeDim;
+        let min = chosenRange.dataset.rangeMin;
+        let max = chosenRange.dataset.rangeMax;
+        let groupName = "dim-" + dim + "-min-" + min + "-max-" + max;
+        
+        // remove chosen class from previously chosen group
+        let chosenGroup = resultsContainer.querySelector(".results-group--chosen");
+        if(chosenGroup !== null) {
+            chosenGroup.classList.remove("results-group--chosen");
+        }
+        
+        chosenGroup = resultsContainer.querySelector("[data-group-name=\"" + groupName + "\"]");
+        chosenGroup.classList.add("results-group--chosen");
+    }
+
+    // range click event listeners
+    [].forEach.call(ranges, function (range) {
+        range.addEventListener("click", function () {
+            if (this !== chosenRange) { // range change
+                chosenRangeBg.classList.remove("chosen-range-bg-" + chosenRange.dataset.rangeIndex);
+                chosenRange = this;
+                chosenRangeBg.classList.add("chosen-range-bg-" + chosenRange.dataset.rangeIndex);
+                updateActiveGroup();
+            }
+        });
+    });
+
+    // size click event listeners
+    [].forEach.call(sizes, function (size) {
+        size.addEventListener("click", function () {
+            if (this !== chosenSize) { // size change
+                chosenSizeBg.classList.remove("chosen-size-bg-" + chosenSize.dataset.sizeIndex);
+                chosenSize = this;
+                chosenSizeBg.classList.add("chosen-size-bg-" + chosenSize.dataset.sizeIndex);
+                updateActiveGroup();
+            }
+        });
+    });
+
+    loadAllResultsGroups();
+    updateActiveGroup();
+    resultsContainer.appendChild(GameResultView.createClearButton());
+    resultsContainer.classList.remove("invisible");
+};
+
 
 const MainMenu = function () {
     var menuContainer = null,
@@ -157,15 +246,13 @@ const MainMenu = function () {
         endlessModeButton = null,
         tutorialButton = null,
         resultsButton = null,
-        resultsContainer = null,
-        gameResultsHelper = null;
+        resultsMenu = null;
 
     var initEndlessGame = function () {
 
     }
 
     menuContainer = document.querySelector(".menu-container");
-    resultsContainer = document.querySelector(".results-container");
     mainMenu = document.querySelector(".main-menu");
     rulloLogo = document.querySelector(".rullo-logo");
     classicModeButton = document.querySelector(".classic-mode");
@@ -186,11 +273,7 @@ const MainMenu = function () {
 
     function showResultsContainer() {
         mainMenu.classList.add("main-menu--invisible");
-        
-        gameResultsHelper = new GameResultsHelper();
-        resultsContainer.appendChild(gameResultsHelper.createElement());
-        resultsContainer.appendChild(GameResultView.createClearButton());
-        resultsContainer.classList.remove("invisible");
+        resultsMenu = new ResultsMenu();
     }
 
     function hideMainMenuButtons() {
@@ -214,7 +297,7 @@ const MainMenu = function () {
     tutorialButton.addEventListener("click", function () {
         hideMainMenuButtons();
     });
-    
+
     resultsButton.addEventListener("click", function () {
         hideMainMenuButtons();
         this.addEventListener("animationend", showResultsContainer);

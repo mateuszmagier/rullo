@@ -16,6 +16,9 @@ const GameResultView = function (json, id, counter) {
         element.classList.add("result-number");
         element.innerText = counter;
 
+        // debugging
+        element.innerText += " ||| " + model.dim + "x" + model.dim + " " + model.min + "-" + model.max;
+
         numberElement = element;
     }
 
@@ -46,26 +49,26 @@ const GameResultView = function (json, id, counter) {
             element.innerText = model.datetime;
         else
             element.innerText = "???";
-        
+
         datetimeElement = element;
     }
-    
+
     function createRemoveElement() {
         let element = document.createElement("i");
         element.classList.add("result-remove", "far", "fa-trash-alt");
-        
-        element.addEventListener("click", function() {
+
+        element.addEventListener("click", function () {
             let resultName = "game-" + id;
             let resultElement = this.parentElement;
             resultElement.classList.add("removed");
             localStorage.removeItem(resultName);
-            
-            resultElement.addEventListener("transitionend", function() {
+
+            resultElement.addEventListener("transitionend", function () {
                 resultElement.parentElement.removeChild(resultElement);
             });
-            
+
         });
-        
+
         removeElement = element;
     }
 
@@ -127,7 +130,7 @@ const GameResultsHelper = function () {
             gamesNumber = games;
     }
 
-    function fetchResults() {
+    function fetchAllResults() {
         if (gamesNumber > 0) { // there are game(s) results saved in LS
             let result; // result object (JSON)
             let resultView; // GameResultView object
@@ -142,23 +145,51 @@ const GameResultsHelper = function () {
                     nr++;
                     result = JSON.parse(resultString);
                     results.push(result);
-                    resultView = new GameResultView(result, i, nr);
-                    resultElement = resultView.getResultElement();
-                    resultElements.push(resultElement);
                 }
             }
         }
     }
 
-    this.createElement = function () {
+    function fetchResultsFromMode(dim, min, max) {
+        let modeResults = [];
+        for (result of results) {
+            if (result.dim == dim && result.min == min && result.max == max)
+                modeResults.push(result);
+        }
+        
+        return modeResults;
+    }
+
+    this.getResultsView = function (dim, min, max) {
+        let resultView, resultElement, nr = 0;
         let element = document.createElement("div");
         element.classList.add("results-group");
-        [].forEach.call(resultElements, function (resultElement) {
-            element.appendChild(resultElement);
-        });
+        element.dataset.groupName = "dim-" + dim + "-min-" + min + "-max-" + max;
+        let modeResults = fetchResultsFromMode(dim, min, max); // json array
+
+        if (modeResults.length > 0) {
+            for (let i = 0; i < modeResults.length; i++) {
+                nr++;
+                resultView = new GameResultView(modeResults[i], i, nr);
+                resultElement = resultView.getResultElement();
+                element.appendChild(resultElement);
+            }
+        } else {
+            element.innerText = "Brak rezultatów."
+        }
+        
+        // update maximum group count and element
+        if(modeResults.length > GameResultsHelper.maxGroupCount) {
+            GameResultsHelper.maxGroupCount = modeResults.length;
+            GameResultsHelper.maxGroup = element;
+        }
+
         return element;
     }
 
     fetchGamesNumber();
-    fetchResults();
+    fetchAllResults();
 }
+
+GameResultsHelper.maxGroupCount = 0;
+GameResultsHelper.maxGroup = null;
