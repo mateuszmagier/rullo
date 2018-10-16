@@ -157,7 +157,7 @@ const ResultsMenu = function () {
         chosenRangeBg = resultsContainer.querySelector(".chosen-range-bg"),
         chosenSizeBg = resultsContainer.querySelector(".chosen-size-bg"),
         chosenGroup = null;
-//        chosenGroup = resultsContainer.querySelector("[data-group-name=\"dim-5-min-1-max-9\"]");
+    //        chosenGroup = resultsContainer.querySelector("[data-group-name=\"dim-5-min-1-max-9\"]");
 
     function loadAllResultsGroups() {
         let resultsGroup;
@@ -185,23 +185,25 @@ const ResultsMenu = function () {
             }
         }
         resultsContainer.appendChild(resultsGroupsWrapper);
-        
+
         // add static position to the longest results group (clear button positioning issue)
+        if (GameResultsHelper.maxGroup === null)
+            GameResultsHelper.maxGroup = resultsGroupsWrapper.children[0];
         GameResultsHelper.maxGroup.classList.add("results-group--longest");
     }
-    
+
     function updateActiveGroup() {
         let dim = chosenSize.dataset.sizeDim;
         let min = chosenRange.dataset.rangeMin;
         let max = chosenRange.dataset.rangeMax;
         let groupName = "dim-" + dim + "-min-" + min + "-max-" + max;
-        
+
         // remove chosen class from previously chosen group
         let chosenGroup = resultsContainer.querySelector(".results-group--chosen");
-        if(chosenGroup !== null) {
+        if (chosenGroup !== null) {
             chosenGroup.classList.remove("results-group--chosen");
         }
-        
+
         chosenGroup = resultsContainer.querySelector("[data-group-name=\"" + groupName + "\"]");
         chosenGroup.classList.add("results-group--chosen");
     }
@@ -232,7 +234,10 @@ const ResultsMenu = function () {
 
     loadAllResultsGroups();
     updateActiveGroup();
-    resultsContainer.appendChild(GameResultView.createClearButton());
+    let buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("buttons-container");
+    buttonsContainer.appendChild(GameResultView.createClearButton());
+    resultsContainer.appendChild(buttonsContainer);
     resultsContainer.classList.remove("invisible");
 };
 

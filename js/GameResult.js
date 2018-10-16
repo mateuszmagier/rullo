@@ -1,8 +1,7 @@
-/*
-    id = game-id from LS label,
+/*,
     counter - result number of displayed results
 */
-const GameResultView = function (json, id, counter) {
+const GameResultView = function (json, counter) {
     var resultElement = null,
         numberElement = null,
         effectElement = null,
@@ -58,13 +57,17 @@ const GameResultView = function (json, id, counter) {
         element.classList.add("result-remove", "far", "fa-trash-alt");
 
         element.addEventListener("click", function () {
-            let resultName = "game-" + id;
+            let resultName = "game-" + model.id;
+            console.log(resultName);
             let resultElement = this.parentElement;
             resultElement.classList.add("removed");
             localStorage.removeItem(resultName);
-
+            
             resultElement.addEventListener("transitionend", function () {
-                resultElement.parentElement.removeChild(resultElement);
+                console.dir(resultElement.parentElement);
+                let resultsGroup = resultElement.parentElement;
+                if (resultsGroup !== null)
+                    resultsGroup.removeChild(resultElement);
             });
 
         });
@@ -107,7 +110,7 @@ const GameResultView = function (json, id, counter) {
 */
 GameResultView.createClearButton = function () {
     let button = document.createElement("a");
-    button.classList.add("clr-button");
+    button.classList.add("clr-button", "button");
     button.setAttribute("href", "index1.html");
     button.innerText = "wyczyść wyniki";
 
@@ -116,6 +119,11 @@ GameResultView.createClearButton = function () {
     });
 
     return button;
+}
+
+GameResultView.createExportButton = function () {
+    let button = document.createElement("a");
+    button.classList.add("export-button");
 }
 
 const GameResultsHelper = function () {
@@ -156,7 +164,7 @@ const GameResultsHelper = function () {
             if (result.dim == dim && result.min == min && result.max == max)
                 modeResults.push(result);
         }
-        
+
         return modeResults;
     }
 
@@ -170,16 +178,16 @@ const GameResultsHelper = function () {
         if (modeResults.length > 0) {
             for (let i = 0; i < modeResults.length; i++) {
                 nr++;
-                resultView = new GameResultView(modeResults[i], i, nr);
+                resultView = new GameResultView(modeResults[i], i + 1, nr);
                 resultElement = resultView.getResultElement();
                 element.appendChild(resultElement);
             }
         } else {
             element.innerText = "Brak rezultatów."
         }
-        
+
         // update maximum group count and element
-        if(modeResults.length > GameResultsHelper.maxGroupCount) {
+        if (modeResults.length > GameResultsHelper.maxGroupCount) {
             GameResultsHelper.maxGroupCount = modeResults.length;
             GameResultsHelper.maxGroup = element;
         }

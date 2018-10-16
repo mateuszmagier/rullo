@@ -4,8 +4,7 @@
     animation-duration: 1s;
     animation-fill-mode: forwards;
     opacity: 1;
-    transition: opacity .3s ease-out;
-    //    position: relative;
+    transition: opacity .3s ease-out; //    position: relative;
 }
 
 .results-menu {
@@ -103,10 +102,12 @@
     left: 0;
     width: 100%;
     opacity: 0;
+    display: none;
     transition: opacity .3s ease-out;
 
     &--chosen {
         opacity: 1;
+        display: block;
         transition: opacity .3s ease-in;
     }
 
@@ -166,22 +167,29 @@
     }
 }
 
-.clr-button {
-    color: white;
-    text-decoration: none;
-    text-transform: uppercase;
-    display: block;
-    margin: 0 auto;
+.buttons-container {
+    width: 100%;
+    text-align: center; //    margin: 0 auto;
+    display: flex;
     margin-top: 20px;
-    letter-spacing: 1px;
-    width: 200px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    border: 2px solid $on-bg-color;
-    transition: background-color .2s ease-in;
 
-    &:hover {
-        background-color: $on-bg-color;
+    .button {
+        color: white;
+        text-decoration: none;
+        text-transform: uppercase;
+        display: block;
+        margin: 0 auto;
+        letter-spacing: 1px;
+        width: 200px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border: 2px solid $on-bg-color;
+        transition: background-color .2s ease-in;
+
+        &:hover {
+            background-color: $on-bg-color;
+        }
     }
+
 }

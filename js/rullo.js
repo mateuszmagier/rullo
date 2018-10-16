@@ -952,6 +952,7 @@ Rullo.prototype.saveGameResult = function () {
     localStorage.setItem(mode, modeWinsNumber);
     
     let result = {
+        id: gamesNumber,
         dim: this.options.dim,
         min: this.options.min,
         max: this.options.max,

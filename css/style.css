@@ -303,9 +303,11 @@
   left: 0;
   width: 100%;
   opacity: 0;
+  display: none;
   transition: opacity .3s ease-out; }
   .results-group--chosen {
     opacity: 1;
+    display: block;
     transition: opacity .3s ease-in; }
   .results-group--longest {
     position: static; }
@@ -344,22 +346,26 @@
     transform: translateX(20px);
     transition: all .5s ease-out; }
 
-.clr-button {
-  color: white;
-  text-decoration: none;
-  text-transform: uppercase;
-  display: block;
-  margin: 0 auto;
-  margin-top: 20px;
-  letter-spacing: 1px;
-  width: 200px;
-  height: 40px;
-  line-height: 40px;
+.buttons-container {
+  width: 100%;
   text-align: center;
-  border: 2px solid #df144c;
-  transition: background-color .2s ease-in; }
-  .clr-button:hover {
-    background-color: #df144c; }
+  display: flex;
+  margin-top: 20px; }
+  .buttons-container .button {
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: block;
+    margin: 0 auto;
+    letter-spacing: 1px;
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 2px solid #df144c;
+    transition: background-color .2s ease-in; }
+    .buttons-container .button:hover {
+      background-color: #df144c; }
 
 * {
   margin: 0;
