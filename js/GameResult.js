@@ -15,9 +15,6 @@ const GameResultView = function (json, counter) {
         element.classList.add("result-number");
         element.innerText = counter;
 
-        // debugging
-        //        element.innerText += " ||| " + model.dim + "x" + model.dim + " " + model.min + "-" + model.max;
-
         numberElement = element;
     }
 
@@ -136,17 +133,32 @@ GameResultView.createExportButton = function () {
     return button;
 }
 
+function importJSON(json) {
+    let maxID = 0;
+    localStorage.clear();
+    for (game of json.games) {
+        localStorage.setItem("game-" + game.id, JSON.stringify(game));
+        if (game.id > maxID)
+            maxID = game.id;
+    }
+    localStorage.setItem("gamesNumber", maxID);
+}
+
 /*
     reads JSON file (File object; given as a parameter) and returns its content
 */
 function readJSONFile(file) {
     let reader = new FileReader();
     reader.onload = function (e) {
-        var contents = e.target.result;
-        console.log("File contents: " + contents);
+        let jsonString, json;
+        jsonString = e.target.result;
+        json = JSON.parse(jsonString);
+        importJSON(json);
     };
     reader.readAsText(file);
 }
+
+
 
 GameResultView.createImportButton = function () {
     let button = document.createElement("div");
@@ -166,10 +178,10 @@ GameResultView.createImportButton = function () {
     // import z pliku JSON
     buttonInput.addEventListener("change", function (e) {
         let files = e.target.files;
+        let json, jsonString;
         if (files.length > 0) { // file were chosen
             console.log(files[0].name);
             readJSONFile(files[0]);
-
         } else { // file were not chosen
             console.log("Anulowano");
         }
@@ -217,13 +229,18 @@ const GameResultsHelper = (function () {
         }
 
         function printJSON() {
-            let json = "[";
-            for (let i = 0; i < results.length - 1; i++)
+            let json = "{\"games\": [";
+            for (let i = 0; i < results.length - 1; i++) {
                 json += JSON.stringify(results[i]) + ",";
-            json += JSON.stringify(results[results.length - 1]) + "]"; // last object - without comma
-            let beautifiedJSON = JSON.stringify(JSON.parse(json), null, "\t");
-            console.log(beautifiedJSON);
-            GameResultsHelper.jsonString = beautifiedJSON;
+            }
+            if (results.length > 0) {
+                json += JSON.stringify(results[results.length - 1]) + "]}"; // last object - without comma
+                let beautifiedJSON = JSON.stringify(JSON.parse(json), null, "\t");
+                console.log(beautifiedJSON);
+                GameResultsHelper.jsonString = beautifiedJSON;
+            } else {
+                GameResultsHelper.jsonString = "";
+            }
         }
 
         function fetchResultsFromMode(dim, min, max) {
@@ -251,7 +268,7 @@ const GameResultsHelper = (function () {
                 return wins;
             },
             getResultsView: function (dim, min, max) {
-                let resultView, resultElement, nr = 0;
+                let resultView, resultElement;
                 let element = document.createElement("div");
                 element.classList.add("results-group");
                 element.dataset.groupName = "dim-" + dim + "-min-" + min + "-max-" + max;
@@ -259,8 +276,7 @@ const GameResultsHelper = (function () {
 
                 if (modeResults.length > 0) {
                     for (let i = 0; i < modeResults.length; i++) {
-                        nr++;
-                        resultView = new GameResultView(modeResults[i], i + 1, nr);
+                        resultView = new GameResultView(modeResults[i], i + 1);
                         resultElement = resultView.getResultElement();
                         element.appendChild(resultElement);
                     }
