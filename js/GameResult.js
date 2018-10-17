@@ -125,28 +125,59 @@ GameResultView.createClearButton = function () {
 
 GameResultView.createExportButton = function () {
     let button = document.createElement("a");
-    let file = new Blob([GameResultsHelper.jsonString], {type: 'text/plain'});
+    let file = new Blob([GameResultsHelper.jsonString], {
+        type: 'text/plain'
+    });
     button.classList.add("export-button", "button");
     button.setAttribute("href", URL.createObjectURL(file));
     button.setAttribute("download", "export.json");
     button.innerText = "eksportuj";
 
     // eksport do pliku JSON
-//    button.addEventListener("click", function (e) {
-////        e.preventDefault();
-//    });
+    //    button.addEventListener("click", function (e) {
+    ////        e.preventDefault();
+    //    });
 
     return button;
 }
 
+/*
+    reads JSON file (File object; given as a parameter) and returns its content
+*/
+function readJSONFile(file) {
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        var contents = e.target.result;
+        console.log("File contents: " + contents);
+    };
+    reader.readAsText(file);
+}
+
 GameResultView.createImportButton = function () {
-    let button = document.createElement("a");
+    let button = document.createElement("div");
     button.classList.add("import-button", "button");
-    button.innerText = "importuj";
+    let buttonInput = document.createElement("input");
+    buttonInput.setAttribute("type", "file");
+    buttonInput.setAttribute("accept", ".json");
+    buttonInput.setAttribute("id", "file-import");
+    buttonInput.classList.add("import-input");
+    button.appendChild(buttonInput);
+    let buttonLabel = document.createElement("label");
+    buttonLabel.setAttribute("for", "file-import");
+    buttonLabel.classList.add("import-label");
+    buttonLabel.innerHTML = "importuj";
+    button.appendChild(buttonLabel);
 
     // import z pliku JSON
-    button.addEventListener("click", function (e) {
-        e.preventDefault();
+    buttonInput.addEventListener("change", function (e) {
+        let files = e.target.files;
+        if (files.length > 0) { // file were chosen
+            console.log(files[0].name);
+            readJSONFile(files[0]);
+
+        } else { // file were not chosen
+            console.log("Anulowano");
+        }
     });
 
     return button;
@@ -190,7 +221,8 @@ const GameResultsHelper = function () {
             json += JSON.stringify(results[i]) + ",";
         json += JSON.stringify(results[results.length - 1]) + "]"; // last object - without comma
         console.log(json);
-        GameResultsHelper.jsonString = json;
+        let beautifiedJSON = JSON.stringify(JSON.parse(json), null, "\t");
+        GameResultsHelper.jsonString = beautifiedJSON;
     }
 
     function fetchResultsFromMode(dim, min, max) {
