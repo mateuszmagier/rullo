@@ -128,15 +128,13 @@ var ClassicMenu = function () {
     }
 
     function setWinsNumber() {
+        let grh = GameResultsHelper.initialize();
         [].forEach.call(sizes, function (size) {
             let dim = size.dataset.sizeDim;
             let min = chosenRange.dataset.rangeMin;
             let max = chosenRange.dataset.rangeMax;
 
-            let modeName = "dim-" + dim + "-min-" + min + "-max-" + max;
-            let modeWinsNumber = localStorage.getItem(modeName);
-            if (modeWinsNumber === null)
-                modeWinsNumber = 0;
+            let modeWinsNumber = grh.getModeWins(dim, min, max);
             let modeWinsNumberElement = size.parentElement.querySelector(".size-wins-number");
             modeWinsNumberElement.innerText = modeWinsNumber;
         });
@@ -149,7 +147,7 @@ var ClassicMenu = function () {
 
 const ResultsMenu = function () {
     var resultsContainer = document.querySelector(".results-container"),
-        gameResultsHelper = new GameResultsHelper(),
+        gameResultsHelper = GameResultsHelper.initialize(),
         ranges = resultsContainer.querySelectorAll(".range"),
         sizes = resultsContainer.querySelectorAll(".size"),
         chosenRange = resultsContainer.querySelector(".range--chosen"),
@@ -157,7 +155,6 @@ const ResultsMenu = function () {
         chosenRangeBg = resultsContainer.querySelector(".chosen-range-bg"),
         chosenSizeBg = resultsContainer.querySelector(".chosen-size-bg"),
         chosenGroup = null;
-    //        chosenGroup = resultsContainer.querySelector("[data-group-name=\"dim-5-min-1-max-9\"]");
 
     function loadAllResultsGroups() {
         let resultsGroup;
