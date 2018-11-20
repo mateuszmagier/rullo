@@ -6,17 +6,14 @@
     height: 150vh;
     width: 50%;
     margin-left: 25%;
-
     @media only screen and (min-width: 751px) and (max-width: 1000px) {
         width: 75%;
         margin-left: 12.5%;
     }
-
     @media only screen and (min-width: 301px) and (max-width: 750px) {
         width: 90%;
         margin-left: 5%;
     }
-
     &--invisible {
         display: none;
     }
@@ -34,12 +31,10 @@
     animation-name: rulloLogoAnimation;
     animation-fill-mode: forwards;
     animation-duration: 2.5s;
-
     &--invisible {
         animation-name: rulloLogoSlideUpAnimation;
         animation-duration: .8s;
     }
-
     span {
         opacity: 0;
         padding-left: 20px;
@@ -55,7 +50,6 @@
     width: 65%;
     margin: 0 auto;
     margin-top: 70px;
-
     &--invisible {
         display: none;
     }
@@ -78,73 +72,82 @@
     justify-content: center;
     cursor: pointer;
     opacity: 0;
-    transition: background-color .2s ease-in;
+    position: relative;
+    transition: all .2s ease-in;
     animation-name: gameModeFadeInAnimation;
     animation-duration: .8s;
     animation-fill-mode: forwards;
-
-
-
+    &.unimplemented {
+        border-color: $off-border-color;
+        &:hover {
+            background-color: transparent;
+            .unimplemented-info {
+                opacity: 1;
+                transition: opacity .2s ease-in;
+            }
+            .main-menu-item-name {
+                opacity: 0;
+                transition: opacity .2s ease-in;
+            }
+        }
+    }
     &:first-child {
         margin-right: 20px;
     }
-
     &:last-child {
         margin-left: 20px;
     }
-
     &.classic-mode {
         animation-delay: 3s;
     }
-
     &.endless-mode {
         animation-delay: 3.4s;
     }
-
     &.tutorial {
         animation-delay: 3.8s;
     }
-
     &.results {
         animation-delay: 4.2s;
     }
-
     &:hover {
         background-color: $on-bg-color;
     }
-
     &--invisible {
         opacity: 1;
-
         &.classic-mode {
             animation-delay: 0.2s;
         }
-
         &.endless-mode {
             animation-delay: 0.2s;
         }
-
         &.tutorial {
             animation-delay: 0.2s;
         }
-
         &.results {
             animation-delay: 0.2s;
         }
-
         &:first-child {
             animation-name: gameModeFadeOutLeftAnimation;
         }
-
         &:last-child {
             animation-name: gameModeFadeOutRightAnimation;
         }
     }
-
     .main-menu-item-name {
         text-transform: uppercase;
         font-size: 1.2em;
     }
+}
+
+.unimplemented-info {
+    // display: none;
+    opacity: 0;
+    position: absolute;
+    // bottom: 20px;
+    left: 0;
+    right: 0;
+    color: white;
+    transition: opacity .2s ease-in;
 }
 
 .classic-menu {
@@ -157,42 +160,33 @@
     animation-duration: 1s;
     animation-fill-mode: forwards;
     opacity: 0;
-
     &--invisible {
         animation-name: none;
         display: none;
     }
-
     &--fadeOut {
         animation-name: gameModeFadeOutAnimation;
         animation-duration: .8s;
     }
-
     .range-container {
         width: 100%;
         display: flex;
         justify-content: space-between;
-
         .range {
             width: 33.33333%;
             padding: 20px 0;
-
             &:hover {
                 cursor: pointer;
-
                 .range-circle {
                     background-color: $on-bg-color;
                 }
             }
-
             &--chosen {
                 background-color: $chosen-range-bg-color;
-
                 .range-circle {
                     background-color: $on-bg-color;
                 }
             }
-
             .range-circle {
                 margin: 0 auto;
                 width: 50px;
@@ -206,31 +200,25 @@
             }
         }
     }
-
     .chosen-range-line {
         width: 33.33333%;
         height: 3px;
         background-color: $on-bg-color;
         transition: transform .3s ease-in;
-
         &-1 {
             transform: translateX(0);
         }
-
         &-2 {
             transform: translateX(100%);
         }
-
         &-3 {
             transform: translateX(200%);
         }
     }
-
     .size-container {
         width: 100%;
         background-color: black;
         padding: 10px 0;
-
         .size {
             width: 50%;
             height: 35px;
@@ -240,12 +228,10 @@
             border: solid 2px $on-bg-color;
             cursor: pointer;
             transition: background-color .2s ease-in;
-
             &:hover {
                 background-color: $on-bg-color;
             }
         }
-
         .size-wins {
             margin-top: 5px;
             margin-bottom: 15px;

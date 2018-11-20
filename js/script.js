@@ -289,13 +289,11 @@ const MainMenu = function () {
     });
 
     endlessModeButton.addEventListener("click", function () {
-        rulloLogo.classList.add("rullo-logo--invisible");
-        hideMainMenuButtons();
-        this.addEventListener("animationend", initEndlessGame); // hide main menu container when animation is done
+        // TODO
     });
 
     tutorialButton.addEventListener("click", function () {
-        hideMainMenuButtons();
+        // TODO
     });
 
     resultsButton.addEventListener("click", function () {

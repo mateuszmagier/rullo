@@ -121,10 +121,21 @@
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transition: background-color .2s ease-in;
+  position: relative;
+  transition: all .2s ease-in;
   animation-name: gameModeFadeInAnimation;
   animation-duration: .8s;
   animation-fill-mode: forwards; }
+  .main-menu-item.unimplemented {
+    border-color: #404350; }
+    .main-menu-item.unimplemented:hover {
+      background-color: transparent; }
+      .main-menu-item.unimplemented:hover .unimplemented-info {
+        opacity: 1;
+        transition: opacity .2s ease-in; }
+      .main-menu-item.unimplemented:hover .main-menu-item-name {
+        opacity: 0;
+        transition: opacity .2s ease-in; }
   .main-menu-item:first-child {
     margin-right: 20px; }
   .main-menu-item:last-child {
@@ -156,6 +167,14 @@
   .main-menu-item .main-menu-item-name {
     text-transform: uppercase;
     font-size: 1.2em; }
+
+.unimplemented-info {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  color: white;
+  transition: opacity .2s ease-in; }
 
 .classic-menu {
   display: block;
