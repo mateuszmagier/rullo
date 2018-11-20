@@ -13,6 +13,21 @@
     }
 }
 
+@keyframes rulloNameAnimation-10 {
+    0% {
+        opacity: 0;
+        letter-spacing: 5px;
+    }
+    
+    30% {
+        letter-spacing: 10px;
+    }
+    
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes rulloLogoSlideUpAnimation {
     0% {
         transform: translateY(0);

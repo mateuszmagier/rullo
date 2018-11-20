@@ -6,6 +6,14 @@
     letter-spacing: 20px; }
   100% {
     opacity: 1; } }
+@keyframes rulloNameAnimation-10 {
+  0% {
+    opacity: 0;
+    letter-spacing: 5px; }
+  30% {
+    letter-spacing: 10px; }
+  100% {
+    opacity: 1; } }
 @keyframes rulloLogoSlideUpAnimation {
   0% {
     transform: translateY(0);
@@ -60,17 +68,21 @@
   color: white;
   text-align: center;
   font-weight: 300;
-  height: 150vh;
+  min-height: 100vh;
   width: 50%;
   margin-left: 25%; }
-  @media only screen and (min-width: 751px) and (max-width: 1000px) {
+  @media only screen and (min-width: 751px) and (max-width: 1050px) {
     .menu-container {
       width: 75%;
       margin-left: 12.5%; } }
-  @media only screen and (min-width: 301px) and (max-width: 750px) {
+  @media only screen and (min-width: 501px) and (max-width: 750px) {
     .menu-container {
       width: 90%;
       margin-left: 5%; } }
+  @media all and (max-width: 500px) {
+    .menu-container {
+      width: 98%;
+      margin-left: 1%; } }
   .menu-container--invisible {
     display: none; }
 
@@ -86,6 +98,10 @@
   animation-name: rulloLogoAnimation;
   animation-fill-mode: forwards;
   animation-duration: 2.5s; }
+  @media all and (max-width: 500px) {
+    .rullo-logo {
+      font-size: 2em;
+      letter-spacing: 10px; } }
   .rullo-logo--invisible {
     animation-name: rulloLogoSlideUpAnimation;
     animation-duration: .8s; }
@@ -97,6 +113,11 @@
     animation-fill-mode: forwards;
     animation-duration: 1.5s;
     animation-delay: 2.7s; }
+    @media all and (max-width: 500px) {
+      .rullo-logo span {
+        animation-name: rulloNameAnimation-10;
+        position: relative;
+        right: 5px; } }
 
 .main-menu {
   width: 65%;
@@ -104,6 +125,9 @@
   margin-top: 70px; }
   .main-menu--invisible {
     display: none; }
+  @media all and (max-width: 650px) {
+    .main-menu {
+      width: 90%; } }
 
 .main-menu-row {
   width: 100%;
@@ -126,8 +150,14 @@
   animation-name: gameModeFadeInAnimation;
   animation-duration: .8s;
   animation-fill-mode: forwards; }
+  @media all and (max-width: 500px) {
+    .main-menu-item {
+      width: 120px;
+      height: 120px; } }
   .main-menu-item.unimplemented {
     border-color: #404350; }
+    .main-menu-item.unimplemented .main-menu-item-name {
+      color: #404350; }
     .main-menu-item.unimplemented:hover {
       background-color: transparent; }
       .main-menu-item.unimplemented:hover .unimplemented-info {
@@ -138,8 +168,14 @@
         transition: opacity .2s ease-in; }
   .main-menu-item:first-child {
     margin-right: 20px; }
+    @media all and (max-width: 500px) {
+      .main-menu-item:first-child {
+        margin-right: 10px; } }
   .main-menu-item:last-child {
     margin-left: 20px; }
+    @media all and (max-width: 500px) {
+      .main-menu-item:last-child {
+        margin-left: 10px; } }
   .main-menu-item.classic-mode {
     animation-delay: 3s; }
   .main-menu-item.endless-mode {
@@ -167,20 +203,22 @@
   .main-menu-item .main-menu-item-name {
     text-transform: uppercase;
     font-size: 1.2em; }
+    @media all and (max-width: 500px) {
+      .main-menu-item .main-menu-item-name {
+        font-size: 1em; } }
 
 .unimplemented-info {
   opacity: 0;
   position: absolute;
   left: 0;
   right: 0;
-  color: white;
+  color: #404350;
   transition: opacity .2s ease-in; }
 
 .classic-menu {
   display: block;
   width: 80%;
-  margin: 0 auto;
-  margin-top: 70px;
+  margin: 70px auto;
   text-align: center;
   animation-name: gameModeFadeInAnimation;
   animation-duration: 1s;
@@ -403,14 +441,14 @@
 
 body {
   background-color: #0D0F18;
-  height: 100vh;
-  overflow: hidden; }
+  height: 100vh; }
 
 .container {
   display: none;
   opacity: 0; }
   .container--visible {
-    height: 100vh;
+    min-height: 100vh;
+    margin-bottom: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -418,10 +456,51 @@ body {
     animation-duration: 1s;
     animation-fill-mode: forwards;
     animation-delay: .5s; }
+  @media all and (max-width: 1000px) {
+    .container--5 {
+      flex-direction: column; }
+      .container--5 .game-menu-container {
+        margin-left: 0;
+        padding-top: 10px;
+        padding-bottom: 10px; }
+        .container--5 .game-menu-container .timer {
+          display: inline-block; }
+        .container--5 .game-menu-container .game-menu {
+          display: inline-block; }
+          .container--5 .game-menu-container .game-menu .menu-button {
+            margin-left: 20px; } }
+  @media all and (min-width: 451px) and (max-width: 700px) {
+    .container--5 .game-container {
+      padding: 20px; } }
+  @media all and (max-width: 450px) {
+    .container--5 .game-container {
+      padding: 5px; } }
+  @media all and (max-width: 600px) {
+    .container--5 .row:first-child {
+      margin-bottom: 5px; }
+    .container--5 .row:last-child {
+      margin-top: 5px; }
+    .container--5 .ball {
+      width: 35px;
+      height: 35px;
+      line-height: 35px;
+      font-size: 1.2em;
+      margin: 4px; }
+    .container--5 .sum {
+      width: 35px;
+      height: 35px;
+      line-height: 35px;
+      font-size: 1.2em;
+      margin: 4px; }
+      .container--5 .sum:first-child {
+        margin-right: 5px; }
+      .container--5 .sum:last-child {
+        margin-left: 5px; } }
 
 .game-container {
   background-color: #171a29;
   padding: 70px 70px;
+  margin: 30px 0;
   border: #df144c solid 3px;
   box-sizing: border-box; }
 
@@ -453,8 +532,14 @@ body {
   justify-content: center; }
   .row:first-child .sum:first-child, .row:last-child .sum:first-child {
     margin-right: 8px; }
+    @media all and (max-width: 600px) {
+      .row:first-child .sum:first-child, .row:last-child .sum:first-child {
+        margin-right: 4px; } }
   .row:first-child .sum:last-child, .row:last-child .sum:last-child {
     margin-left: 8px; }
+    @media all and (max-width: 600px) {
+      .row:first-child .sum:last-child, .row:last-child .sum:last-child {
+        margin-left: 4px; } }
 
 .ball {
   width: 50px;
@@ -526,11 +611,18 @@ body {
   padding-bottom: 0;
   border: 2px solid #e4d292;
   margin-left: 20px; }
+  @media all and (max-width: 500px) {
+    .game-menu-container {
+      padding-left: 10px;
+      padding-right: 10px; } }
 
 .timer {
   color: white;
   font-family: "Roboto", monospace;
   font-size: 2.5em; }
+  @media all and (max-width: 500px) {
+    .timer {
+      font-size: 2em; } }
   .timer .mins:after {
     content: ":"; }
   .timer .secs:after {
@@ -556,6 +648,12 @@ body {
   cursor: pointer;
   text-decoration: none;
   transition: background-color .2s ease-in; }
+  @media all and (max-width: 500px) {
+    .menu-button {
+      font-size: 1.4em;
+      width: 40px;
+      height: 40px;
+      line-height: 40px; } }
   .menu-button:hover {
     background-color: #df144c; }
 

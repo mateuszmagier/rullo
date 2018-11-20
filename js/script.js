@@ -56,7 +56,7 @@ var ClassicMenu = function () {
 
         document.querySelector(".container").appendChild(gameContainer);
         document.querySelector(".container").appendChild(gameMenuContainer);
-        document.querySelector(".container").classList.add("container--visible");
+        document.querySelector(".container").classList.add("container--visible", "container--" + dimension);
 
 
         let options = {
